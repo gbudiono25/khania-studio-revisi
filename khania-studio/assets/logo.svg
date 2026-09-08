@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64">
+  <defs>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#C5A059" />
+    </linearGradient>
+  </defs>
+  <!-- Icon Mark -->
+  <rect x="4" y="8" width="48" height="48" rx="12" fill="#0F172A" />
+  <path d="M18 20 L28 32 L18 44" fill="none" stroke="url(#gold-grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M28 20 L38 32 L28 44" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Text Mark -->
+  <text x="64" y="32" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#FFFFFF">KHANIA <tspan fill="url(#gold-grad)">STUDIO</tspan></text>
+  <text x="64" y="48" font-family="'Manrope', sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="#94A3B8">WEBSITE &amp; DIGITAL SOLUTIONS</text>
+</svg>

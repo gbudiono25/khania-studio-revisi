@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="senja-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C2D12"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#senja-bg)"/>
+  <rect x="20" y="20" width="560" height="360" rx="8" fill="none" stroke="#F97316" stroke-width="2" opacity="0.3"/>
+  <circle cx="300" cy="140" r="30" fill="#F97316" opacity="0.3"/>
+  <path d="M285 150 C 285 130 315 130 315 150" fill="none" stroke="#FDBA74" stroke-width="4"/>
+  <text x="300" y="240" font-family="'Playfair Display', serif" font-size="24" font-weight="700" fill="#FFFFFF" text-anchor="middle">Senja Resto &amp; Café</text>
+  <text x="300" y="270" font-family="'Manrope', sans-serif" font-size="14" font-weight="600" fill="#FDBA74" text-anchor="middle">Kuliner &amp; Coffee Shop Experience</text>
+  <rect x="200" y="295" width="200" height="28" rx="14" fill="#7C2D12" stroke="#F97316" stroke-width="1"/>
+  <text x="300" y="314" font-family="'Manrope', sans-serif" font-size="11" font-weight="700" fill="#FDBA74" text-anchor="middle">DEMO / KONSEP DESAIN</text>
+</svg>

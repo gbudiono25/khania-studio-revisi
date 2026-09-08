@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="tanur-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064E3B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#tanur-bg)"/>
+  <rect x="20" y="20" width="560" height="360" rx="8" fill="none" stroke="#059669" stroke-width="2" opacity="0.4"/>
+  <circle cx="300" cy="140" r="48" fill="#047857" opacity="0.5"/>
+  <!-- Crescent & Mosque Dome Vector Icon -->
+  <path d="M290 110 A 30 30 0 1 0 320 150 A 24 24 0 1 1 290 110 Z" fill="#D4AF37"/>
+  <text x="300" y="230" font-family="'Playfair Display', serif" font-size="24" font-weight="700" fill="#FFFFFF" text-anchor="middle">Tanur Muthmainnah Tour</text>
+  <text x="300" y="260" font-family="'Manrope', sans-serif" font-size="14" font-weight="600" fill="#34D399" text-anchor="middle">Layanan Travel Umrah &amp; Haji Khusus</text>
+  <rect x="200" y="290" width="200" height="28" rx="14" fill="#059669"/>
+  <text x="300" y="309" font-family="'Manrope', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">PROYEK BISNIS NYATA</text>
+</svg>
