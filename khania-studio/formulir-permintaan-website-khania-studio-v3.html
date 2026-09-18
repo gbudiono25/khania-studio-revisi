@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Client Website Brief Form V3 — Khania Studio</title>
+<style>
+:root {
+  --n: #0F172A;
+  --n2: #1E293B;
+  --g: #D4AF37;
+  --bg: #F1F5F9;
+  --line: #D9E0E8;
+  --muted: #64748B;
+  --warn: #7C5E00;
+  --wbg: #FFF8DC;
+  --red: #991B1B;
+  --ok: #166534;
+  --okbg: #DCFCE7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--n); font: 15px/1.6 Arial, sans-serif; }
+.wrap { max-width: 980px; margin: auto; padding: 20px 15px 80px; }
+
+/* Hero */
+.hero { background: linear-gradient(135deg, var(--n), var(--n2)); color: #fff; padding: 32px 28px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(15,23,42,0.15); }
+.badge { display: inline-block; background: var(--g); color: var(--n); font-weight: 800; padding: 4px 12px; border-radius: 99px; font-size: 12px; letter-spacing: 0.5px; }
+.hero h1 { font-size: 28px; margin: 12px 0 8px; font-weight: 800; color: #fff; }
+.hero p { margin: 6px 0; color: #DDE5EF; font-size: 15px; }
+.hero .note { background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 16px; border-radius: 10px; margin-top: 14px; font-size: 14px; }
+
+/* Cards & Sections */
+.card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin: 18px 0; box-shadow: 0 4px 20px rgba(15,23,42,0.04); }
+h2 { font-size: 19px; margin: 0 0 6px; color: var(--n); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.desc { color: var(--muted); font-size: 13.5px; margin: 0 0 16px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.full { grid-column: 1 / -1; }
+.field { margin-bottom: 12px; }
+label { display: block; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; color: var(--n); }
+.req { color: var(--red); }
+.hint { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+
+/* Form Controls */
+input, select, textarea { width: 100%; padding: 11px 13px; border: 1px solid #CBD5E1; border-radius: 9px; font: inherit; background: #fff; color: var(--n); transition: border-color 0.2s, box-shadow 0.2s; }
+textarea { min-height: 90px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--g); box-shadow: 0 0 0 3px rgba(212,175,55,0.25); }
+
+/* Option Grid Cards */
+.options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 10px 0; }
+.opt-card { border: 1px solid var(--line); background: #F8FAFC; border-radius: 10px; padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; transition: background 0.2s, border-color 0.2s; user-select: none; }
+.opt-card:hover { background: #F1F5F9; border-color: #CBD5E1; }
+.opt-card input[type="radio"], .opt-card input[type="checkbox"] { width: auto; margin: 0; cursor: pointer; }
+.opt-card.active { background: #FFFDF0; border-color: var(--g); color: var(--n); }
+
+/* Expandable Info Detail */
+details.info-detail { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; margin: 12px 0; padding: 10px 14px; transition: background 0.2s; }
+details.info-detail summary { font-weight: 700; color: #475569; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; list-style: none; }
+details.info-detail summary::-webkit-details-marker { display: none; }
+details.info-detail summary .sum-title { display: flex; align-items: center; gap: 6px; }
+details.info-detail summary .arrow { font-size: 11px; transition: transform 0.2s; }
+details.info-detail[open] summary .arrow { transform: rotate(180deg); }
+details.info-detail .detail-content { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #CBD5E1; color: var(--muted); font-size: 13px; line-height: 1.55; }
+
+/* Special Alerts */
+.alert-note { background: var(--wbg); border: 1px solid #E8D88C; color: var(--warn); padding: 12px 16px; border-radius: 10px; margin: 12px 0; font-size: 13.5px; }
+.alert-security { background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 16px; border-radius: 10px; margin: 12px 0; font-size: 13.5px; font-weight: 600; }
+
+/* Product Items List */
+.item-card { background: #F8FAFC; border: 1px solid var(--line); padding: 16px; border-radius: 12px; margin: 12px 0; position: relative; }
+.item-card h3 { margin: 0 0 10px; font-size: 15.5px; color: var(--n); }
+.delete-btn { position: absolute; right: 14px; top: 14px; border: 0; background: #FEE2E2; color: var(--red); padding: 5px 10px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.delete-btn:hover { background: #FCA5A5; }
+.quota-badge { display: inline-block; padding: 4px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 700; margin-bottom: 10px; }
+.quota-in { background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
+.quota-out { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+
+/* KPIs Header */
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.kpi { background: #F8FAFC; border: 1px solid var(--line); border-radius: 10px; padding: 12px; text-align: center; }
+.kpi b { display: block; font-size: 20px; color: var(--n); }
+.kpi span { font-size: 12px; color: var(--muted); }
+
+/* Dynamic Conditionals */
+.conditional { display: none; }
+
+/* Action Buttons & Modals */
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.btn { border: 0; border-radius: 10px; padding: 12px 20px; font-weight: 800; cursor: pointer; font-size: 14.5px; transition: opacity 0.2s, transform 0.1s; }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--g); color: var(--n); }
+.btn-secondary { background: #E2E8F0; color: var(--n); }
+.btn-secondary:hover { background: #CBD5E1; }
+.check-label { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0; font-size: 13.5px; cursor: pointer; }
+.check-label input { width: auto; margin-top: 3px; }
+
+/* Modal Summary Preview */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 15px; }
+.modal-content { background: #fff; width: 100%; max-width: 720px; max-height: 85vh; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 14px; }
+.modal-header h3 { margin: 0; font-size: 18px; color: var(--n); }
+.modal-body { overflow-y: auto; flex: 1; font-size: 13.5px; white-space: pre-wrap; background: #F8FAFC; border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.modal-footer { margin-top: 14px; display: flex; justify-content: flex-end; gap: 10px; }
+
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr; }
+  .full { grid-column: auto; }
+  .kpis { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 23px; }
+  .options-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="badge">KHANIA STUDIO</span>
+    <h1>Client Website Brief Form V3</h1>
+    <p>Formulir ringkas dan terstruktur. Isi data yang Anda ketahui, Khania Studio akan membantu menyusun konsep, struktur, copywriting, dan arah desain website Anda.</p>
+    <div class="note"><b>Penting:</b> Pertanyaan tambahan akan muncul otomatis sesuai paket dan jenis website yang Anda pilih. Anda selalu dapat memilih <i>"Belum tahu — mohon dibantu Khania Studio"</i>.</div>
+  </header>
+
+  <form id="briefForm" action="proses-formulir.php" method="POST" enctype="multipart/form-data">
+    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0">
+
+    <!-- A. DATA PEMESAN & PAKET -->
+    <section class="card">
+      <h2>A. Paket & Data Pemesan</h2>
+      <p class="desc">Informasi dasar pemesan dan pilihan paket website Khania Studio.</p>
+      <div class="grid">
+        <div class="field">
+          <label>Paket Website <span class="req">*</span></label>
+          <select id="pkg" name="package" required>
+            <option value="">-- Pilih Paket --</option>
+            <option value="Starter">Starter — Maks. 3 Halaman</option>
+            <option value="Bronze">Bronze — Maks. 6 Halaman</option>
+            <option value="Silver">Silver — Maks. 10 Halaman</option>
+            <option value="Gold">Gold — Maks. 15 Halaman</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Jenis Website <span class="req">*</span></label>
+          <select id="type" name="siteType" required>
+            <option value="">-- Pilih Jenis Website --</option>
+            <option value="Landing Page / Promo">Landing Page / Promo</option>
+            <option value="UMKM / Bisnis Lokal">UMKM / Bisnis Lokal</option>
+            <option value="Laundry">Laundry / Jasa Cuci</option>
+            <option value="Company Profile">Company Profile / Perusahaan</option>
+            <option value="Portfolio / Personal Branding">Portfolio / Personal Branding</option>
+            <option value="Jasa Profesional">Jasa Profesional</option>
+            <option value="Travel / Umroh / Haji">Travel / Umroh / Haji</option>
+            <option value="Restaurant / Café">Restaurant / Café</option>
+            <option value="Hotel / Hospitality">Hotel / Hospitality</option>
+            <option value="Property / Real Estate">Property / Real Estate</option>
+            <option value="Toko Online Sederhana">Toko Online Sederhana</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><b id="kpiPages">—</b><span>Batas Halaman</span></div>
+        <div class="kpi"><b id="kpiItems">—</b><span>Item Produk/Jasa Lengkap</span></div>
+        <div class="kpi"><b id="kpiSeo">—</b><span>Artikel SEO</span></div>
+      </div>
+      <p class="hint">"Item Lengkap" = item yang ditampilkan dengan Foto + Deskripsi. Anda tetap dapat mencatat lebih banyak produk/jasa.</p>
+
+      <hr style="border:0;border-top:1px dashed var(--line);margin:16px 0">
+
+      <div class="grid">
+        <div class="field"><label>Nama Pemesan / PIC <span class="req">*</span></label><input name="pic" required placeholder="Nama lengkap Anda"></div>
+        <div class="field"><label>Jabatan / Peran <span class="req">*</span></label><input name="picRole" required placeholder="Contoh: Pemilik Bisnis / Marketing"></div>
+        <div class="field"><label>Email PIC <span class="req">*</span></label><input type="email" name="picEmail" required placeholder="nama@email.com"></div>
+        <div class="field"><label>WhatsApp PIC <span class="req">*</span></label><input name="picWhatsapp" required placeholder="08xxxxxxxxxx"></div>
+        <div class="field full"><label>Kota Domisili (Opsional)</label><input name="picCity" placeholder="Contoh: Bekasi, Jakarta Selatan"></div>
+      </div>
+    </section>
+
+    <!-- B. INFORMASI BISNIS -->
+    <section class="card">
+      <h2>B. Informasi Bisnis</h2>
+      <p class="desc">Fakta dan gambaran usaha Anda yang ingin ditampilkan pada website.</p>
+      <div class="grid">
+        <div class="field"><label>Nama Bisnis / Brand <span class="req">*</span></label><input name="businessName" required placeholder="Contoh: RapiClean Laundry"></div>
+        <div class="field"><label>Bidang Usaha <span class="req">*</span></label><input name="businessCategory" required placeholder="Contoh: Jasa Laundry Kiloan & Satuan"></div>
+        <div class="field full"><label>Deskripsi Bisnis <span class="req">*</span></label><textarea name="businessDescription" required placeholder="Apa yang bisnis Anda lakukan, produk/jasa utama, dan nilai penting yang perlu diketahui calon pelanggan?"></textarea></div>
+        <div class="field full"><label>Target Pelanggan Utama <span class="req">*</span></label><textarea name="targetAudience" required placeholder="Contoh: Warga perumahan, mahasiswa, karyawan di sekitar Jatiasih Bekasi."></textarea></div>
+        <div class="field"><label>Nama Legal (Opsional)</label><input name="legalName" placeholder="Contoh: PT Rapi Clean Indonesia"></div>
+        <div class="field"><label>Tahun Berdiri (Opsional)</label><input name="foundedYear" placeholder="Contoh: 2021"></div>
+        <div class="field"><label>Area Layanan (Opsional)</label><input name="serviceArea" placeholder="Contoh: Jatiasih, Pondok Gede, Bekasi"></div>
+        <div class="field"><label>Jam Operasional (Opsional)</label><input name="businessHours" placeholder="Contoh: Senin - Minggu (07.00 - 21.00 WIB)"></div>
+        <div class="field full"><label>Lokasi / Alamat Usaha (Opsional)</label><textarea name="businessAddress" placeholder="Alamat lengkap lokasi usaha Anda"></textarea></div>
+      </div>
+    </section>
+
+    <!-- C. TUJUAN UTAMA WEBSITE -->
+    <section class="card">
+      <h2>C. Tujuan Utama Website</h2>
+      <p class="desc">Menentukan prioritas struktur, susunan konten, dan Tombol Aksi Utama (CTA) pada website.</p>
+
+      <div class="field">
+        <label>Tujuan Utama Website (Pilih 1 Utama) <span class="req">*</span></label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Mendapatkan chat WhatsApp" required> Mendapatkan Chat WA</label>
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Mendapatkan telepon"> Mendapatkan Telepon</label>
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Mendapatkan inquiry / lead"> Inquiry / Lead Form</label>
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Mendapatkan booking / reservasi"> Booking / Reservasi</label>
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Menjual produk / jasa"> Menjual Produk / Jasa</label>
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Memperkenalkan bisnis"> Memperkenalkan Bisnis</label>
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Membangun kredibilitas"> Membangun Kredibilitas</label>
+          <label class="opt-card"><input type="radio" name="primaryGoal" value="Menampilkan portofolio"> Menampilkan Portofolio</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Tujuan Lain (Opsional — Boleh Lebih Dari 1)</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="checkbox" name="secondaryGoals[]" value="Chat WhatsApp"> Chat WhatsApp</label>
+          <label class="opt-card"><input type="checkbox" name="secondaryGoals[]" value="Tampil di Google Search"> Tampil di Google Search</label>
+          <label class="opt-card"><input type="checkbox" name="secondaryGoals[]" value="Katalog Produk"> Katalog Produk/Jasa</label>
+          <label class="opt-card"><input type="checkbox" name="secondaryGoals[]" value="Profil Perusahaan"> Profil Perusahaan</label>
+          <label class="opt-card"><input type="checkbox" name="secondaryGoals[]" value="BROSUR / PDF Download"> Download Brosur</label>
+        </div>
+      </div>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">💡 Info Detail Tujuan Website</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content">Tujuan utama membantu Khania Studio menentukan fokus visual hierarchy, penataan seksi beranda, penyusunan copywriting, dan penempatan tombol WhatsApp / Form Aksi.</div>
+      </details>
+    </section>
+
+    <!-- D. STRUKTUR HALAMAN -->
+    <section class="card">
+      <h2>D. Struktur Halaman Website</h2>
+      <p class="desc">Jumlah halaman tetap dibatasi mengikuti kuota paket yang dipilih.</p>
+
+      <div class="field">
+        <label>Pilihan Struktur Halaman</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="structureChoice" value="Khania Studio membantu menentukan" id="strDefault"> Khania Studio Membantu Menentukan (Default)</label>
+          <label class="opt-card"><input type="radio" name="structureChoice" value="Saya sudah memiliki usulan struktur" id="strCustom"> Saya Memiliki Usulan Struktur Halaman</label>
+        </div>
+      </div>
+
+      <div class="field conditional" id="customStructureWrap">
+        <label>Usulan Halaman / Menu</label>
+        <textarea name="proposedStructure" placeholder="Contoh: Beranda, Tentang Kami, Layanan Laundry, Daftar Harga, Galeri, Kontak"></textarea>
+      </div>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">ℹ️ Info Detail Struktur Halaman</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content">Anda tidak harus menentukan halaman sendiri. Khania Studio dapat menyusun struktur terbaik berdasarkan paket, jenis bisnis, tujuan website, dan materi yang tersedia.</div>
+      </details>
+    </section>
+
+    <!-- E. FITUR / FUNGSI WEBSITE -->
+    <section class="card">
+      <h2>E. Fitur & Fungsi Website</h2>
+      <p class="desc">Pilih fitur yang ingin tersedia pada website Anda.</p>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">⚙️ Checklist Fitur Website (Klik untuk Buka/Tutup)</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content" style="border:0;padding-top:0">
+          <div class="options-grid">
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Tombol WhatsApp"> Tombol WhatsApp</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Form Kontak"> Form Kontak</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Email Direct"> Email Direct</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Google Maps"> Google Maps Interaktif</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Galeri Foto"> Galeri Foto</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Katalog Produk / Jasa"> Katalog Produk / Jasa</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Testimonial Pelanggan"> Testimonial Pelanggan</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Instagram Feed / Link"> Instagram Link/Feed</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Download PDF / Katalog"> Download PDF / Price List</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Booking / Reservasi Form"> Form Booking / Reservasi</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Google Review Badge"> Google Review Badge</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Blog / Artikel SEO"> Blog / Artikel SEO</label>
+            <label class="opt-card"><input type="checkbox" name="features[]" value="Belum tahu — mohon direkomendasikan Khania Studio"> Belum tahu — Mohon Direkomendasikan Khania Studio</label>
+          </div>
+        </div>
+      </details>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">💡 Info Detail Fitur</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content">Fitur website adalah fungsi teknis interaktif pada website, bukan daftar produk/jasa bisnis Anda. Contoh: Tombol WhatsApp mengambang, Peta Lokasi Google Maps, atau Formulir Kontak.</div>
+      </details>
+    </section>
+
+    <!-- F. DOMAIN WEBSITE -->
+    <section class="card">
+      <h2>F. Domain Website</h2>
+      <p class="desc">Domain adalah alamat web Anda (contoh: <code>namabisnis.com</code>).</p>
+
+      <div class="field">
+        <label>Apakah sudah memiliki domain?</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="hasDomain" value="Belum" id="domBelum"> Belum Memiliki Domain</label>
+          <label class="opt-card"><input type="radio" name="hasDomain" value="Sudah dan ingin menggunakannya" id="domSudahUse"> Sudah Memiliki Domain & Ingin Menggunakannya</label>
+          <label class="opt-card"><input type="radio" name="hasDomain" value="Sudah tetapi ingin mengganti" id="domSudahChange"> Sudah Memiliki Domain Tetapi Ingin Mengganti</label>
+          <label class="opt-card"><input type="radio" name="hasDomain" value="Belum tahu — mohon dibantu" id="domTahu"> Belum Tahu — Mohon Dibantu Khania Studio</label>
+        </div>
+      </div>
+
+      <div class="field conditional" id="existingDomainWrap">
+        <label id="existingDomainLabel">Nama domain yang sudah dimiliki</label>
+        <input name="existingDomain" placeholder="Contoh: rapicleanlaundry.com">
+      </div>
+
+      <div class="field conditional" id="desiredDomainWrap">
+        <label id="desiredDomainLabel">Nama domain yang diinginkan (Opsional)</label>
+        <input name="desiredDomain" placeholder="Contoh: rapiclean-laundry.com">
+      </div>
+
+      <div class="alert-security">🔒 Keamanan Kredensial: Jangan pernah memasukkan password akun domain atau hosting ke dalam formulir ini.</div>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">ℹ️ Info Detail Domain</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content">Nama domain boleh dikosongkan jika Anda ingin berkonsultasi terlebih dahulu atau belum menemukan nama domain yang sesuai. Khania Studio dapat membantu memberikan saran rekomendasi nama domain.</div>
+      </details>
+    </section>
+
+    <!-- G. WEBSITE LAMA / REDESIGN -->
+    <section class="card">
+      <h2>G. Website Lama & Status Pekerjaan</h2>
+      <div class="field">
+        <label>Apakah bisnis Anda sudah memiliki website sebelumnya?</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="hasExistingSite" value="Belum" id="siteBelum"> Belum (Website Pertama)</label>
+          <label class="opt-card"><input type="radio" name="hasExistingSite" value="Sudah" id="siteSudah"> Sudah Memiliki Website</label>
+        </div>
+      </div>
+
+      <div class="conditional grid" id="existingSiteWrap">
+        <div class="field full"><label>URL Website Lama</label><input type="url" name="oldSiteUrl" placeholder="https://..."></div>
+        <div class="field"><label>Apa yang ingin dipertahankan?</label><textarea name="keepOld" placeholder="Kontak, foto produk, warna logo..."></textarea></div>
+        <div class="field"><label>Apa yang ingin diubah?</label><textarea name="changeOld" placeholder="Tampilan jadul, tidak mobile friendly, kecepatan lambat..."></textarea></div>
+      </div>
+
+      <div class="field">
+        <label>Jenis Pekerjaan</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="jobType" value="Website baru"> Buat Website Baru</label>
+          <label class="opt-card"><input type="radio" name="jobType" value="Redesign website lama"> Redesign Website Lama</label>
+          <label class="opt-card"><input type="radio" name="jobType" value="Belum tahu — mohon dibantu"> Belum tahu — Mohon Dibantu</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- H. PRODUK / JASA -->
+    <section class="card">
+      <h2>H. Daftar Produk / Jasa</h2>
+      <p class="desc">Masukkan semua produk atau jasa yang ingin ditampilkan di website. Anda boleh menambahkan sebanyak yang diperlukan.</p>
+      
+      <div id="productList"></div>
+      <button type="button" class="btn btn-secondary" id="btnAddProduct" style="margin-bottom:16px;">+ Tambah Produk / Jasa</button>
+
+      <hr style="border:0;border-top:1px dashed var(--line);margin:16px 0">
+
+      <div class="field" style="margin-bottom:16px;">
+        <label for="featuredProductSelect">Produk / Jasa yang Ingin Ditonjolkan</label>
+        <p class="hint" style="margin-top:-2px;margin-bottom:8px;">Pilih produk atau jasa yang paling ingin Anda tonjolkan pada website. Khania Studio dapat menempatkannya lebih menonjol berdasarkan tujuan website dan struktur desain.</p>
+        <select name="featuredProduct" id="featuredProductSelect">
+          <option value="Belum tahu — mohon direkomendasikan Khania Studio">Belum tahu — Mohon direkomendasikan Khania Studio</option>
+        </select>
+      </div>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">💡 Info Detail Produk &amp; Kuota Paket</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content">
+          <p style="margin:0 0 8px;">Anda boleh mencatat semua produk atau jasa bisnis Anda. Jumlah produk/jasa tidak dibatasi oleh formulir.</p>
+          <p style="margin:0 0 8px;">Batas paket Khania Studio berlaku pada jumlah item yang mendapat tampilan lengkap, misalnya foto + deskripsi.</p>
+          <p style="margin:0 0 8px;">Produk/jasa lainnya tetap dapat ditampilkan secara ringkas sesuai struktur website yang disepakati.</p>
+          <p style="margin:0 0 8px;">Harga juga tidak wajib dicantumkan apabila harga tidak tetap atau Anda tidak ingin menampilkannya.</p>
+          <div style="background:#FFFDF0;border:1px solid #E8D88C;padding:10px 14px;border-radius:8px;margin-top:10px;color:var(--n);">
+            <b>Contoh:</b><br>
+            Bisnis laundry dapat memasukkan:
+            <ul style="margin:4px 0 0 18px;padding:0;">
+              <li>Cuci saja</li>
+              <li>Kering saja</li>
+              <li>Cuci + Kering</li>
+              <li>Cuci + Kering + Sabun &amp; Softener</li>
+              <li>Cuci + Kering + Rapikan</li>
+            </ul>
+            Semua dapat dicatat. Starter hanya menentukan berapa item yang memperoleh tampilan lengkap.
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- I. BRAND & DESIGN DIRECTION -->
+    <section class="card">
+      <h2>I. Identitas Brand & Arah Desain</h2>
+      <p class="desc">Bantu kami memahami preferensi visual usaha Anda. Pilih <i>"Belum tahu"</i> bila ingin bantuan rekomendasi dari Khania Studio.</p>
+
+      <div class="field">
+        <label>Penggunaan Warna Brand</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="colorChoice" value="Ya, gunakan warna brand saya"> Warna Brand Resmi</label>
+          <label class="opt-card"><input type="radio" name="colorChoice" value="Saya punya preferensi warna"> Memiliki Preferensi Warna</label>
+          <label class="opt-card"><input type="radio" name="colorChoice" value="Belum tahu — mohon dibantu"> Belum Tahu — Mohon Dibantu</label>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="field"><label>Warna Utama / Preferensi</label><input name="brandColors" placeholder="Contoh: Biru laut & Putih / Emas"></div>
+        <div class="field"><label>Warna yang Dihindari</label><input name="avoidColors" placeholder="Contoh: Merah menyala, Merah tua"></div>
+      </div>
+
+      <div class="field">
+        <label>Penggunaan Gaya Font</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="fontChoice" value="Sudah memiliki font"> Font Resmi Brand</label>
+          <label class="opt-card"><input type="radio" name="fontChoice" value="Ingin gaya font tertentu"> Ingin Gaya Font Spesifik</label>
+          <label class="opt-card"><input type="radio" name="fontChoice" value="Belum tahu — mohon dibantu"> Belum Tahu — Mohon Dibantu</label>
+        </div>
+        <input name="fontStyle" placeholder="Contoh: Modern Sans-Serif / Elegan Serif / Friendly" style="margin-top:8px">
+      </div>
+
+      <div class="field">
+        <label>Gaya Visual yang Disukai (Boleh Pilih Lebih Dari 1)</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Modern"> Modern</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Minimalis"> Minimalis</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Elegan"> Elegan</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Profesional"> Profesional</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Friendly"> Friendly</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Bold"> Bold</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Luxury"> Luxury</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Playful"> Playful</label>
+          <label class="opt-card"><input type="checkbox" name="visualStyle[]" value="Belum tahu — mohon dibantu"> Belum Tahu — Mohon Dibantu</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- J. REFERENSI DESAIN -->
+    <section class="card">
+      <h2>J. Referensi Desain</h2>
+      <p class="desc">Referensi digunakan sebagai dasar inspirasi tata letak dan nuansa visual.</p>
+
+      <div class="field">
+        <label>Kondisi Referensi Desain</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="referenceStatus" value="Saya punya satu referensi"> Satu Referensi Utama</label>
+          <label class="opt-card"><input type="radio" name="referenceStatus" value="Saya punya beberapa referensi"> Beberapa Referensi</label>
+          <label class="opt-card"><input type="radio" name="referenceStatus" value="Saya ingin desain baru dari nol"> Desain Dari Nol</label>
+          <label class="opt-card"><input type="radio" name="referenceStatus" value="Belum punya referensi — mohon dibantu"> Belum Punya — Mohon Dibantu</label>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="field full"><label>Link Website Referensi (Opsional)</label><input type="url" name="referenceUrl" placeholder="https://..."></div>
+        <div class="field full"><label>Upload Screenshot / File Referensi (Opsional)</label><input type="file" name="referenceFiles[]" accept="image/*,.pdf" multiple></div>
+      </div>
+
+      <div class="field">
+        <label>Bagian Referensi yang Disukai</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="checkbox" name="likedParts[]" value="Warna"> Skema Warna</label>
+          <label class="opt-card"><input type="checkbox" name="likedParts[]" value="Layout"> Layout / Tata Letak</label>
+          <label class="opt-card"><input type="checkbox" name="likedParts[]" value="Hero"> Tampilan Hero / Banner</label>
+          <label class="opt-card"><input type="checkbox" name="likedParts[]" value="Menu"> Navigation / Menu</label>
+          <label class="opt-card"><input type="checkbox" name="likedParts[]" value="Font"> Typography / Font</label>
+          <label class="opt-card"><input type="checkbox" name="likedParts[]" value="Card"> Desain Kartu Produk</label>
+          <label class="opt-card"><input type="checkbox" name="likedParts[]" value="Footer"> Footer Website</label>
+        </div>
+      </div>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">🛡️ Info Kebijakan Referensi</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content">Referensi digunakan sebagai inspirasi dan penyesuaian arah desain. Khania Studio tidak menyalin identitas, logo, teks, atau aset terlindungi milik pihak lain.</div>
+      </details>
+    </section>
+
+    <!-- K. PESAN UTAMA / COPYWRITING -->
+    <section class="card">
+      <h2>K. Pesan Utama Website (Opsional)</h2>
+      <p class="desc">Jika Anda sudah memiliki draft kalimat utama. Bila belum, Khania Studio akan menyusun copywriting untuk Anda.</p>
+      
+      <div class="grid">
+        <div class="field full"><label>Headline (Judul Utama Banner)</label><input name="headline" placeholder="Contoh: Jasa Laundry Express 3 Jam Selesai di Jatiasih"></div>
+        <div class="field full"><label>Subheadline (Penjelas)</label><textarea name="subheadline" placeholder="Contoh: Antar jemput gratis, pakaian bersih wangi dan dikemas rapi higienis."></textarea></div>
+        <div class="field full"><label>Tombol Aksi Utama (CTA)</label><input name="primaryCTA" placeholder="Contoh: Pesan Laundry Via WhatsApp"></div>
+      </div>
+
+      <div class="alert-note"><b>💡 Catatan Copywriting:</b> Belum punya kalimat sendiri? Tidak masalah. Khania Studio menyusun copywriting profesional berdasarkan data bisnis yang Anda berikan.</div>
+    </section>
+
+    <!-- L. DATA SPESIFIK INDUSTRI (CONDITIONAL) -->
+
+    <!-- LAUNDRY -->
+    <section class="card conditional" data-industry="Laundry">
+      <h2>L. Khusus Jasa Laundry</h2>
+      <div class="grid">
+        <div class="field"><label>Jenis Layanan</label><textarea name="laundryServiceTypes" placeholder="Kiloan, Satuan, Karpet, Sepatu, Stroller, Bedcover"></textarea></div>
+        <div class="field"><label>Model Layanan</label>
+          <select name="laundryModel"><option value="Keduanya">Full-Service & Self-Service</option><option value="Full-service">Full-Service (Dikerjakan Petugas)</option><option value="Self-service">Self-Service (Coin Laundry)</option></select>
+        </div>
+        <div class="field"><label>Layanan Antar Jemput (Pickup/Delivery)</label><input name="laundryPickup" placeholder="Gratis radius 3km / Rp 5.000 / flat"></div>
+        <div class="field"><label>Waktu Proses Layanan</label><input name="laundryTurnaround" placeholder="Express 3 jam, Reguler 1 hari, 2 hari"></div>
+        <div class="field full"><label>Fasilitas & Keunggulan Laundry</label><textarea name="laundryFacilities" placeholder="Detergen higienis, setrika uap, 1 mesin 1 pelanggan, air steril"></textarea></div>
+        <div class="field full"><label>Daftar Harga Layanan</label><textarea name="laundryPricing" placeholder="Kiloan Rp 7.000/kg, Bedcover Rp 25.000, Sepatu Rp 30.000"></textarea></div>
+      </div>
+    </section>
+
+    <!-- COMPANY PROFILE -->
+    <section class="card conditional" data-industry="Company Profile">
+      <h2>L. Khusus Company Profile</h2>
+      <div class="grid">
+        <div class="field full"><label>Sejarah / Perjalanan Perusahaan</label><textarea name="companyHistory"></textarea></div>
+        <div class="field"><label>Visi Perusahaan</label><textarea name="vision"></textarea></div>
+        <div class="field"><label>Misi Perusahaan</label><textarea name="mission"></textarea></div>
+        <div class="field full"><label>Core Values / Nilai Utama</label><textarea name="coreValues"></textarea></div>
+        <div class="field full"><label>Direksi / Manajemen (Nama & Jabatan)</label><textarea name="management"></textarea></div>
+        <div class="field full"><label>Unit Bisnis / Divisi / Cabang</label><textarea name="businessUnits"></textarea></div>
+      </div>
+    </section>
+
+    <!-- RESTAURANT / CAFE -->
+    <section class="card conditional" data-industry="Restaurant / Café">
+      <h2>L. Khusus Restoran & Café</h2>
+      <div class="grid">
+        <div class="field full"><label>Menu Utama & Kategori Menu</label><textarea name="restaurantMenu"></textarea></div>
+        <div class="field"><label>Rentang Harga</label><input name="restaurantPrice" placeholder="Rp 15.000 - Rp 75.000"></div>
+        <div class="field"><label>Layanan Reservasi Meja</label><input name="restaurantBooking" placeholder="Tersedia via WA / Form"></div>
+        <div class="field full"><label>Order Online / Delivery Partner Link</label><input name="restaurantDelivery" placeholder="GoFood, GrabFood, ShopeeFood link"></div>
+      </div>
+    </section>
+
+    <!-- HOTEL / HOSPITALITY -->
+    <section class="card conditional" data-industry="Hotel / Hospitality">
+      <h2>L. Khusus Hotel & Hospitality</h2>
+      <div class="grid">
+        <div class="field full"><label>Tipe Kamar & Tarif</label><textarea name="hotelRooms" placeholder="Deluxe Room (Rp 450rb), Suite Room (Rp 850rb)"></textarea></div>
+        <div class="field full"><label>Fasilitas Utama</label><textarea name="hotelFacilities" placeholder="Kolam renang, WiFi 100Mbps, Restoran 24j, Meeting room"></textarea></div>
+        <div class="field"><label>Jam Check-in / Check-out</label><input name="hotelCheckInOut" placeholder="Check-in 14:00, Check-out 12:00"></div>
+        <div class="field"><label>Alur Reservasi</label><input name="hotelBooking"></div>
+      </div>
+    </section>
+
+    <!-- PROPERTY -->
+    <section class="card conditional" data-industry="Property / Real Estate">
+      <h2>L. Khusus Properti / Real Estate</h2>
+      <div class="grid">
+        <div class="field"><label>Nama Proyek Properti</label><input name="propertyProject"></div>
+        <div class="field"><label>Lokasi Kawasan</label><input name="propertyLocation"></div>
+        <div class="field"><label>Luas Kawasan & Jumlah Unit</label><input name="propertyArea"></div>
+        <div class="field"><label>Legalitas / Status Sertifikat</label><input name="propertyLegal" placeholder="SHM / HGB Selesai"></div>
+        <div class="field full"><label>Tipe Rumah / Unit & Spesifikasi</label><textarea name="propertyTypes" placeholder="Tipe 36/60, Tipe 45/84, Tipe 70/100"></textarea></div>
+        <div class="field full"><label>Fasilitas Kawasan</label><textarea name="propertyFacilities" placeholder="One gate system, CCTV 24j, Playground, Masjid"></textarea></div>
+      </div>
+    </section>
+
+    <!-- TRAVEL -->
+    <section class="card conditional" data-industry="Travel / Umroh / Haji">
+      <h2>L. Khusus Travel / Umroh / Haji</h2>
+      <div class="grid">
+        <div class="field full"><label>Paket Perjalanan & Destinasi</label><textarea name="travelPackages" placeholder="Umroh Reguler 9 Hari, Umroh Plus Turkey 12 Hari"></textarea></div>
+        <div class="field"><label>Izin Resmi / Legalitas PPIU</label><textarea name="travelLicenses" placeholder="No. Izin Kemenag..."></textarea></div>
+        <div class="field"><label>Fasilitas & Pembimbing</label><textarea name="travelFacilities"></textarea></div>
+      </div>
+    </section>
+
+    <!-- M. KREDIBILITAS & TESTIMONIAL -->
+    <section class="card">
+      <h2>M. Kredibilitas & Testimonial</h2>
+      <p class="desc">Informasi yang membangun kepercayaan calon konsumen Anda.</p>
+      <div class="grid">
+        <div class="field full"><label>Bukti Kredibilitas / Legalitas / Penghargaan / Pengalaman</label><textarea name="credentials" placeholder="Contoh: Berizin resmi, sertifikasi ISO, pengalaman 10+ tahun, 5.000+ pelanggan."></textarea></div>
+        <div class="field full"><label>Testimonial Pelanggan Nyata (Opsional)</label><textarea name="testimonials" placeholder="Tuliskan ulasan asli dari pembeli/klien Anda. Boleh dikosongkan jika belum ada."></textarea></div>
+        <div class="field full"><label>Upload Foto Pemberi Testimonial (Opsional)</label><input type="file" name="testimonialPhoto[]" accept="image/*" multiple></div>
+      </div>
+    </section>
+
+    <!-- N. ASET & DOKUMEN -->
+    <section class="card">
+      <h2>N. Upload Aset & Dokumen</h2>
+      <p class="desc">Kirimkan aset materi resmi yang dimiliki bisnis Anda.</p>
+      <div class="grid">
+        <div class="field"><label>Logo Bisnis</label><input type="file" name="logo[]" accept="image/*,.svg"></div>
+        <div class="field"><label>Foto Bisnis / Tempat / Tim</label><input type="file" name="businessImages[]" accept="image/*" multiple></div>
+        <div class="field"><label>Video Promosi / Lokasi</label><input type="file" name="videos[]" accept="video/*" multiple></div>
+        <div class="field"><label>Dokumen / Brosur PDF</label><input type="file" name="documents[]" accept=".pdf,.doc,.docx,.xls,.xlsx" multiple></div>
+      </div>
+
+      <label class="check-label">
+        <input type="checkbox" name="assetConsent" required>
+        <span>Saya menyatakan memiliki hak/izin resmi atas seluruh aset, logo, dan dokumen yang diunggah. <span class="req">*</span></span>
+      </label>
+
+      <details class="info-detail">
+        <summary><span class="sum-title">🔒 Perlindungan Aset Autentik</span> <span class="arrow">▼</span></summary>
+        <div class="detail-content">Aset autentik seperti logo resmi, foto produk asli, foto tempat, site plan, dan screenshot tidak akan dimodifikasi atau diregenerasi AI tanpa izin tertulis dari Anda.</div>
+      </details>
+    </section>
+
+    <!-- O. KONTAK BISNIS -->
+    <section class="card">
+      <h2>O. Kontak Bisnis & Media Sosial</h2>
+      <div class="grid">
+        <div class="field"><label>WhatsApp Bisnis</label><input name="bizWa" placeholder="08xxxxxxxxxx"></div>
+        <div class="field"><label>PIC / Admin WA</label><input name="bizWaPic" placeholder="Contoh: Admin CS"></div>
+        <div class="field"><label>Telepon Bisnis</label><input name="phone" placeholder="021-xxxxxxx"></div>
+        <div class="field"><label>Email Bisnis</label><input type="email" name="bizEmail" placeholder="info@bisnis.com"></div>
+        <div class="field"><label>Instagram</label><input name="instagram" placeholder="@namabisnis"></div>
+        <div class="field"><label>Facebook</label><input name="facebook" placeholder="Nama Page FB"></div>
+        <div class="field"><label>TikTok</label><input name="tiktok" placeholder="@namabisnis"></div>
+        <div class="field"><label>Google Maps Link</label><input name="maps" placeholder="https://maps.app.goo.gl/..."></div>
+        <div class="field full"><label>Alamat Lengkap Publik</label><textarea name="publicAddress"></textarea></div>
+      </div>
+
+      <div class="field">
+        <label>Kontak Utama yang Ingin Ditonjolkan</label>
+        <div class="options-grid">
+          <label class="opt-card"><input type="radio" name="primaryContact" value="WhatsApp"> WhatsApp</label>
+          <label class="opt-card"><input type="radio" name="primaryContact" value="Telepon"> Telepon</label>
+          <label class="opt-card"><input type="radio" name="primaryContact" value="Email"> Email</label>
+          <label class="opt-card"><input type="radio" name="primaryContact" value="Form Kontak"> Form Kontak</label>
+          <label class="opt-card"><input type="radio" name="primaryContact" value="Booking Link"> Booking Link</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- P. SEO & TARGET PASAR -->
+    <section class="card">
+      <h2>P. SEO & Target Pasar</h2>
+      <p class="desc">Terutama relevan untuk paket Silver & Gold. Anda tidak wajib memahami istilah teknis SEO.</p>
+      <div class="grid">
+        <div class="field full"><label>Kata Kunci / Keyword yang Diketahui</label><textarea name="keywords" placeholder="Contoh: laundry kiloan Jatiasih, cuci bedcover express Bekasi"></textarea></div>
+        <div class="field"><label>Kota / Area Target Utama</label><input name="seoLocation" placeholder="Contoh: Bekasi & Jakarta Timur"></div>
+        <div class="field"><label>Website Pesaing / Pembanding</label><input name="competitors" placeholder="Link website pembanding"></div>
+        <div class="field full"><label>Topik Artikel yang Diinginkan</label><textarea name="seoTopics" placeholder="Contoh: Tips merawat baju rajut, cara menghilangkan noda minyak"></textarea></div>
+      </div>
+      <label class="check-label" style="margin-top:10px">
+        <input type="checkbox" name="seoAssist" value="Ya">
+        <span>Belum tahu — Mohon dibantu susun strategi SEO oleh Khania Studio</span>
+      </label>
+    </section>
+
+    <!-- Q. REVIEW & APPROVAL -->
+    <section class="card">
+      <h2>Q. Periksa & Konfirmasi Kirim</h2>
+      <div class="alert-note">
+        <b>STATUS PROSES:</b> Setelah dikirim, status formulir adalah <i>"DATA DITERIMA — MENUNGGU PEMERIKSAAN KHANIA STUDIO"</i>. Status <b>READY FOR PRODUCTION</b> akan ditetapkan setelah Khania Studio mengonfirmasi kelengkapan materi dan scope.
+      </div>
+
+      <label class="check-label"><input type="checkbox" required> <span>Saya menyatakan seluruh informasi yang diisikan adalah benar dan berwenang memberikan materi ini. <span class="req">*</span></span></label>
+      <label class="check-label"><input type="checkbox" required> <span>Saya memahami data ini menjadi dasar penyusunan Copywriting, Blueprint, dan Desain Website. <span class="req">*</span></span></label>
+
+      <div class="field" style="margin-top:14px">
+        <label>Nama Pengonfirmasi / Persetujuan <span class="req">*</span></label>
+        <input name="approvalName" required placeholder="Tuliskan nama Anda sebagai tanda persetujuan">
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="btnReview">Periksa Data Ringkas</button>
+        <button type="submit" class="btn btn-primary" id="btnSubmit">Kirim Client Brief V3</button>
+      </div>
+    </section>
+  </form>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="reviewModal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Ringkasan Client Brief Form V3</h3>
+      <button type="button" id="btnCloseModal" style="border:0;background:none;font-size:20px;cursor:pointer">&times;</button>
+    </div>
+    <div class="modal-body" id="modalText"></div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="btnCloseModal2">Tutup & Edit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Quota Rules per Package
+const rules = {
+  Starter: [3, 1, 0],
+  Bronze: [6, 3, 0],
+  Silver: [10, 6, 5],
+  Gold: [15, 10, 10]
+};
+
+const briefForm = document.getElementById('briefForm');
+const pkgSelect = document.getElementById('pkg');
+const typeSelect = document.getElementById('type');
+const productList = document.getElementById('productList');
+
+// Update Featured Product Dropdown Options
+function updateFeaturedProductOptions() {
+  const select = document.getElementById('featuredProductSelect');
+  if (!select) return;
+  const currentVal = select.value;
+  
+  select.innerHTML = '<option value="Belum tahu — mohon direkomendasikan Khania Studio">Belum tahu — Mohon direkomendasikan Khania Studio</option>';
+  
+  const nameInputs = productList.querySelectorAll('.prod-name-input');
+  let matchFound = false;
+  
+  nameInputs.forEach((input, idx) => {
+    const val = input.value.trim();
+    if (val) {
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = (idx + 1) + '. ' + val;
+      if (val === currentVal) {
+        opt.selected = true;
+        matchFound = true;
+      }
+      select.appendChild(opt);
+    }
+  });
+
+  if (!matchFound && currentVal && currentVal !== 'Belum tahu — mohon direkomendasikan Khania Studio') {
+    const opt = document.createElement('option');
+    opt.value = currentVal;
+    opt.textContent = currentVal;
+    opt.selected = true;
+    select.appendChild(opt);
+  }
+}
+
+// Update KPIs and Product Quota Badges
+function updatePkgRules() {
+  const r = rules[pkgSelect.value] || ['—', '—', '—'];
+  document.getElementById('kpiPages').textContent = r[0];
+  document.getElementById('kpiItems').textContent = r[1];
+  document.getElementById('kpiSeo').textContent = r[2];
+
+  const quotaLimit = typeof r[1] === 'number' ? r[1] : 0;
+  const items = productList.querySelectorAll('.item-card');
+  items.forEach((card, idx) => {
+    const badge = card.querySelector('.quota-badge');
+    if (idx < quotaLimit) {
+      badge.textContent = '✓ Termasuk kuota item tampilan lengkap paket';
+      badge.className = 'quota-badge quota-in';
+    } else {
+      badge.textContent = '⚡ Di luar kuota item tampilan lengkap — tetap dapat dicatat dan dapat ditampilkan secara ringkas sesuai struktur website dan ketentuan paket.';
+      badge.className = 'quota-badge quota-out';
+    }
+  });
+  updateFeaturedProductOptions();
+}
+
+// Add Product / Service Item (Unlimited)
+function addProductItem() {
+  const count = productList.children.length + 1;
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.innerHTML = `
+    <button type="button" class="delete-btn">&times; Hapus</button>
+    <h3>Produk / Jasa #${count}</h3>
+    <span class="quota-badge quota-in">Termasuk kuota item tampilan lengkap paket</span>
+    <div class="grid">
+      <div class="field full">
+        <label>Nama Produk / Jasa <span class="req">*</span></label>
+        <input name="productName[]" class="prod-name-input" required placeholder="Contoh: Laundry Kiloan Express">
+      </div>
+      <div class="field">
+        <label>Status Tampilan Harga</label>
+        <select name="productPriceStatus[]" class="prod-price-status">
+          <option value="Ya, tampilkan harga">Ya, tampilkan harga</option>
+          <option value="Tidak, jangan tampilkan harga">Tidak, jangan tampilkan harga</option>
+          <option value="Harga berdasarkan konsultasi">Harga berdasarkan konsultasi</option>
+          <option value="Belum tahu — mohon dibantu">Belum tahu — mohon dibantu</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Harga (Opsional)</label>
+        <input name="productPrice[]" class="prod-price-input" placeholder="Contoh: Rp 10.000 / kg">
+      </div>
+      <div class="field full">
+        <label>Deskripsi Singkat (Opsional)</label>
+        <textarea name="productDescription[]" placeholder="Jelaskan detail proses dan fasilitas item ini..."></textarea>
+      </div>
+      <div class="field full">
+        <label>Keunggulan / Manfaat Utama (Opsional)</label>
+        <textarea name="productBenefit[]" placeholder="Antar jemput cepat, wangi tahan 7 hari..."></textarea>
+      </div>
+      <div class="field full">
+        <label>Foto Produk / Jasa (Opsional)</label>
+        <input type="file" name="productImage[]" accept="image/*">
+      </div>
+    </div>
+  `;
+
+  div.querySelector('.delete-btn').onclick = () => { 
+    div.remove(); 
+    productList.querySelectorAll('.item-card').forEach((card, i) => {
+      card.querySelector('h3').textContent = `Produk / Jasa #${i + 1}`;
+    });
+    updatePkgRules(); 
+  };
+
+  const nameInput = div.querySelector('.prod-name-input');
+  nameInput.addEventListener('input', updateFeaturedProductOptions);
+
+  const statusSelect = div.querySelector('.prod-price-status');
+  const priceInput = div.querySelector('.prod-price-input');
+  statusSelect.addEventListener('change', () => {
+    if (statusSelect.value === 'Tidak, jangan tampilkan harga') {
+      priceInput.placeholder = 'Harga disembunyikan';
+    } else if (statusSelect.value === 'Harga berdasarkan konsultasi') {
+      priceInput.placeholder = 'Sesuai konsultasi';
+    } else {
+      priceInput.placeholder = 'Contoh: Rp 10.000 / kg';
+    }
+  });
+
+  productList.appendChild(div);
+  updatePkgRules();
+}
+
+// Dynamic Conditionals for Industry
+function toggleIndustrySections() {
+  const selectedType = typeSelect.value;
+  document.querySelectorAll('[data-industry]').forEach(sec => {
+    if (sec.dataset.industry === selectedType) {
+      sec.style.display = 'block';
+    } else {
+      sec.style.display = 'none';
+    }
+  });
+}
+
+// Dynamic Conditionals for Structure
+document.querySelectorAll('input[name="structureChoice"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('customStructureWrap').style.display = (r.value.includes('usulan')) ? 'block' : 'none';
+  });
+});
+
+// Dynamic Conditionals for Domain Status (4 Radio Options)
+function updateDomainFields() {
+  const selected = document.querySelector('input[name="hasDomain"]:checked')?.value || '';
+  const existingWrap = document.getElementById('existingDomainWrap');
+  const desiredWrap = document.getElementById('desiredDomainWrap');
+  const existingLbl = document.getElementById('existingDomainLabel');
+  const desiredLbl = document.getElementById('desiredDomainLabel');
+
+  if (selected === 'Sudah dan ingin menggunakannya') {
+    existingWrap.style.display = 'block';
+    desiredWrap.style.display = 'none';
+    existingLbl.textContent = 'Nama domain yang sudah dimiliki';
+  } else if (selected === 'Sudah tetapi ingin mengganti') {
+    existingWrap.style.display = 'block';
+    desiredWrap.style.display = 'block';
+    existingLbl.textContent = 'Nama domain lama';
+    desiredLbl.textContent = 'Nama domain baru yang diinginkan';
+  } else if (selected === 'Belum' || selected.includes('Belum tahu')) {
+    existingWrap.style.display = 'none';
+    desiredWrap.style.display = 'block';
+    desiredLbl.textContent = 'Nama domain yang diinginkan (Opsional)';
+  } else {
+    existingWrap.style.display = 'none';
+    desiredWrap.style.display = 'none';
+  }
+}
+document.querySelectorAll('input[name="hasDomain"]').forEach(r => r.addEventListener('change', updateDomainFields));
+
+// Dynamic Conditionals for Old Website Status
+document.querySelectorAll('input[name="hasExistingSite"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.getElementById('existingSiteWrap').style.display = (r.value === 'Sudah') ? 'grid' : 'none';
+  });
+});
+
+// Highlight Option Cards
+document.querySelectorAll('.opt-card input').forEach(inp => {
+  inp.addEventListener('change', () => {
+    if (inp.type === 'radio') {
+      document.querySelectorAll(`input[name="${inp.name}"]`).forEach(i => {
+        i.closest('.opt-card')?.classList.remove('active');
+      });
+    }
+    if (inp.checked) {
+      inp.closest('.opt-card')?.classList.add('active');
+    } else {
+      inp.closest('.opt-card')?.classList.remove('active');
+    }
+  });
+});
+
+// Review Data Modal
+document.getElementById('btnReview').onclick = () => {
+  if (!briefForm.checkValidity()) {
+    briefForm.reportValidity();
+    return;
+  }
+  const fd = new FormData(briefForm);
+  const lines = [];
+  lines.push("=== KHANIA STUDIO CLIENT WEBSITE BRIEF V3 ===");
+  lines.push("Waktu Periksa: " + new Date().toLocaleString('id-ID'));
+  lines.push("--------------------------------------------");
+
+  for (let [k, v] of fd.entries()) {
+    if (v instanceof File) {
+      if (v.name) lines.push(`${k}: [File Upload] ${v.name}`);
+    } else if (v && v.trim() !== '') {
+      lines.push(`${k}: ${v}`);
+    }
+  }
+
+  document.getElementById('modalText').textContent = lines.join('\n');
+  document.getElementById('reviewModal').style.display = 'flex';
+};
+
+document.getElementById('btnCloseModal').onclick = () => document.getElementById('reviewModal').style.display = 'none';
+document.getElementById('btnCloseModal2').onclick = () => document.getElementById('reviewModal').style.display = 'none';
+
+pkgSelect.onchange = updatePkgRules;
+typeSelect.onchange = toggleIndustrySections;
+document.getElementById('btnAddProduct').onclick = addProductItem;
+
+// Initial Setup
+addProductItem();
+updatePkgRules();
+toggleIndustrySections();
+updateDomainFields();
+</script>
+</body>
+</html>

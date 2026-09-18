@@ -1,0 +1,3 @@
+<FilesMatch "^(config-pemesanan\.php|data/.*)$">
+  Require all denied
+</FilesMatch>

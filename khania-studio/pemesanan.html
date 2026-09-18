@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemesanan Website — Khania Studio</title>
+  <meta name="description" content="Formulir pemesanan website Khania Studio dengan rincian paket, voucher, batas pembayaran, dan informasi rekening.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/pemesanan.css">
+  <script src="js/main.js" defer></script>
+  <script src="js/pemesanan.js" defer></script>
+</head>
+<body>
+<header class="header">
+  <div class="container nav-container">
+    <a href="index.html#hero" class="brand-logo" aria-label="Khania Studio Homepage">
+      <img src="assets/logo.svg" alt="Khania Studio Logo — Website &amp; Digital Solutions" width="320" height="64">
+    </a>
+    <nav aria-label="Main Navigation">
+      <ul class="nav-menu">
+        <li><a href="index.html#hero" class="nav-link">Beranda</a></li>
+        <li><a href="index.html#portfolio" class="nav-link">Portofolio</a></li>
+        <li><a href="index.html#layanan" class="nav-link active">Layanan &amp; Harga</a></li>
+        <li><a href="blog.html" class="nav-link">Blog</a></li>
+        <li><a href="contact.html" class="nav-link">Kontak Kami</a></li>
+        <li><a href="https://wa.me/6285286939234?text=Halo%20Khania%20Studio,%20saya%20ingin%20konsultasi%20pembuatan%20website" class="btn btn-gold btn-whatsapp" target="_blank" rel="noopener">Konsultasi Gratis</a></li>
+      </ul>
+    </nav>
+    <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">&#9776;</button>
+  </div>
+</header>
+
+<main class="order-page">
+  <section class="order-hero">
+    <div class="container order-container">
+      <span class="badge-pill badge-gold">PEMESANAN WEBSITE</span>
+      <h1 class="order-title">Formulir Pemesanan Website</h1>
+      <p class="order-subtitle">Lengkapi data pemesanan dan lakukan pembayaran sesuai paket yang Anda pilih.</p>
+      <div class="order-note"><strong>Belum yakin dengan paketnya?</strong> Anda tetap dapat berkonsultasi dengan Khania Studio melalui WhatsApp sebelum melakukan pembayaran.</div>
+    </div>
+  </section>
+
+  <div class="container order-container order-layout">
+    <form id="orderForm" action="proses-pemesanan.php" method="post" enctype="multipart/form-data" novalidate>
+      <input type="hidden" name="package" id="packageInput">
+      <input type="hidden" name="packageBase" id="packageBaseInput">
+      <input type="hidden" name="setupFee" id="setupFeeInput">
+      <input type="hidden" name="orderTotal" id="orderTotalInput">
+      <input type="hidden" name="orderDate" id="orderDateInput">
+      <input type="hidden" name="dueDate" id="dueDateInput">
+      <input type="hidden" name="voucherCode" id="voucherCodeInput">
+      <input type="hidden" name="voucherDiscount" id="voucherDiscountInput">
+
+      <section class="order-card">
+        <div class="section-kicker">01</div>
+        <h2>Paket yang Anda Pesan</h2>
+        <p class="section-desc">Paket ditentukan otomatis dari tombol paket yang Anda pilih pada website Khania Studio.</p>
+        <div id="packageWarning" class="order-alert warning" hidden>Paket belum ditentukan. Silakan kembali ke halaman Layanan &amp; Harga dan pilih paket yang ingin dipesan.</div>
+        <div class="selected-package">
+          <div>
+            <span class="selected-label">PAKET</span>
+            <strong id="packageName">—</strong>
+          </div>
+          <div class="selected-total">
+            <span>Harga Paket</span>
+            <strong id="packageDisplayTotal">Rp0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="order-card">
+        <div class="section-kicker">02</div>
+        <h2>Data Pemesan</h2>
+        <p class="section-desc">Nomor WhatsApp diperlukan agar Khania Studio dapat menghubungi Anda bila ada data yang perlu dikonfirmasi.</p>
+        <div class="form-grid">
+          <div class="field"><label for="customerName">Nama Lengkap <span>*</span></label><input id="customerName" name="customerName" required autocomplete="name" placeholder="Nama lengkap Anda"></div>
+          <div class="field"><label for="businessName">Nama Usaha / Bisnis <span>*</span></label><input id="businessName" name="businessName" required placeholder="Contoh: RapiClean Laundry"></div>
+          <div class="field"><label for="whatsapp">Nomor WhatsApp yang dapat dihubungi <span>*</span></label><input id="whatsapp" name="whatsapp" required inputmode="tel" autocomplete="tel" placeholder="Contoh: 0812xxxxxxxx"></div>
+          <div class="field"><label for="email">Email <span>*</span></label><input id="email" name="email" type="email" required autocomplete="email" placeholder="nama@email.com"></div>
+          <div class="field full"><label for="domain">Nama domain yang diinginkan</label><input id="domain" name="domain" placeholder="Contoh: rapicleanlaundry.com"><div class="hint">Jika belum tahu atau belum tersedia, boleh dikosongkan. Khania Studio dapat membantu.</div></div>
+        </div>
+      </section>
+
+      <section class="order-card">
+        <div class="section-kicker">03</div>
+        <h2>Ringkasan Pesanan</h2>
+        <div class="summary-table">
+          <div><span>Sewa Hosting + Domain 1 Tahun + Desain Website</span><strong id="basePrice">Rp0</strong></div>
+          <div><span>Biaya Setup untuk 1 tahun pertama</span><strong id="setupPrice">Rp0</strong></div>
+          <div class="voucher-row"><span>Voucher <small id="voucherStatus">(opsional)</small></span><strong id="discountDisplay">Rp0</strong></div>
+          <div class="summary-total"><span>TOTAL PEMBAYARAN</span><strong id="totalPrice">Rp0</strong></div>
+        </div>
+
+        <div class="voucher-box">
+          <label for="voucher">Punya kode voucher?</label>
+          <div class="voucher-input-row"><input id="voucher" name="voucher" placeholder="Masukkan kode voucher" autocomplete="off"><button type="button" class="btn btn-outline-gold" id="applyVoucher">Gunakan Voucher</button></div>
+          <div id="voucherMessage" class="hint" aria-live="polite">Kode voucher hanya dapat digunakan jika Anda menerimanya dari Khania Studio.</div>
+        </div>
+
+        <div class="deadline-box">
+          <div><span class="deadline-label">Tanggal Pemesanan</span><strong id="orderDateDisplay">—</strong></div>
+          <div><span class="deadline-label">Batas Pembayaran</span><strong id="dueDateDisplay">—</strong><small>H+2, pukul 23:59 WIB</small></div>
+        </div>
+      </section>
+
+      <section class="order-card">
+        <div class="section-kicker">04</div>
+        <h2>Pembayaran</h2>
+        <p class="section-desc">Silakan transfer sesuai total pembayaran ke rekening Khania Studio.</p>
+        <div class="bank-card">
+          <div><span>Nama Bank</span><strong>Bank BCA</strong></div>
+          <div class="account-row"><span>Nomor Rekening</span><div class="account-value"><strong id="accountNumber">6755-538-381</strong><button type="button" class="copy-account" id="copyAccount">Salin Nomor Rekening</button></div></div>
+          <div><span>Atas Nama</span><strong>Gembong Budiono</strong></div>
+          <div class="transfer-note"><span>Berita Transfer</span><strong id="transferNote">[Paket] atas nama [Nama Pemesan]</strong></div>
+        </div>
+
+        <div class="field"><label for="paymentDate">Tanggal Pembayaran <span>*</span></label><input id="paymentDate" name="paymentDate" type="date" required></div>
+        <div class="field"><label for="paymentProof">Bukti Transfer <span>*</span></label><input id="paymentProof" name="paymentProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><div class="hint">JPG, PNG, WEBP, atau PDF. Maksimal 10 MB.</div></div>
+      </section>
+
+      <section class="order-card confirmation-card">
+        <div class="consent-row"><label><input type="checkbox" id="consentInfo" required> Saya telah membaca informasi paket yang dipilih dan memahami rincian harga serta layanan yang tercantum.</label></div>
+        <div class="consent-row"><label><input type="checkbox" id="consentBrief" required> Saya memahami bahwa setelah pembayaran terverifikasi, Khania Studio akan mengirimkan link untuk mengisi Form Brief Website.</label></div>
+        <button type="submit" class="btn btn-gold order-submit" id="submitOrder">Kirim Pesanan &amp; Konfirmasi Pembayaran</button>
+      </section>
+    </form>
+
+    <aside class="order-sidebar">
+      <div class="help-card">
+        <span class="badge-pill badge-navy">MASIH MEMBUTUHKAN INFORMASI?</span>
+        <h3>Silakan konsultasi terlebih dahulu.</h3>
+        <p>Jika Anda memerlukan informasi lebih lanjut mengenai paket ini sebelum melakukan pembayaran, silakan berkonsultasi dengan Khania Studio melalui WhatsApp.</p>
+        <a href="https://wa.me/6285286939234?text=Halo%20Khania%20Studio,%20saya%20ingin%20bertanya%20tentang%20paket%20website" class="btn btn-outline-gold btn-whatsapp" target="_blank" rel="noopener">Konsultasi via WhatsApp</a>
+      </div>
+      <div class="studio-card">
+        <span class="studio-card-kicker">INFORMASI PENYEDIA JASA</span>
+        <h3>Khania Studio</h3>
+        <p><strong>Website &amp; Digital Solutions</strong></p>
+        <p>Perumahan Satwika Permai Blok C1 No.4 RT.03/RW.09<br>Jatiasih, Bekasi 17425<br>Indonesia</p>
+        <p><strong>No. HP/WA:</strong> 0852-8693-9234<br><strong>Email:</strong> admin@khania-studio.com<br><strong>Email:</strong> gbudiono.25@gmail.com<br><strong>Website:</strong> www.khania-studio.com</p>
+        <p class="studio-consultant"><strong>Gembong Budiono</strong><br><em>AI Website Developer Consultant</em></p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><img src="assets/logo.svg" alt="Khania Studio Logo" width="280" height="56"><p>Khania Studio adalah studio digital profesional yang membantu UMKM, profesional, dan bisnis di Indonesia memiliki website profesional yang sesuai kebutuhan dan siap digunakan.</p></div>
+      <div class="footer-col"><h4>Navigasi Halaman</h4><ul class="footer-links"><li><a href="index.html#hero">Beranda</a></li><li><a href="index.html#portfolio">Portofolio</a></li><li><a href="index.html#layanan">Layanan &amp; Harga</a></li><li><a href="blog.html">Blog</a></li><li><a href="contact.html">Kontak Kami</a></li></ul></div>
+      <div class="footer-col"><h4>Informasi Studio</h4><ul class="footer-links"><li><a href="index.html#cara-pesan">Cara Pesan</a></li><li><a href="index.html#faq">FAQ</a></li><li><a href="index.html#harga">Ketentuan Paket</a></li></ul></div>
+      <div class="footer-col footer-contact"><h4>Hubungi Kami</h4><p>Jatiasih, Bekasi</p><p>admin@khania-studio.com</p><p>0852-8693-9234</p></div>
+    </div>
+    <div class="footer-bottom"><div>&copy; 2026 Khania Studio (Website &amp; Digital Solutions). All rights reserved.</div><div class="footer-leader">Ir. Gembong Budiono &mdash; Website Developer</div></div>
+  </div>
+</footer>
+</body>
+</html>

@@ -198,6 +198,9 @@ function initPortfolioModal() {
     const categoryEl = card.querySelector('.portfolio-category');
     const descEl = card.querySelector('.portfolio-info p');
 
+    const urlEl = card.querySelector('.browser-address');
+    const modalUrl = document.getElementById('modal-url');
+
     if (!imgEl || !titleEl || !categoryEl || !descEl) return;
 
     lastFocusedElement = document.activeElement;
@@ -205,6 +208,10 @@ function initPortfolioModal() {
     modalImg.src = imgEl.src;
     modalImg.alt = imgEl.alt;
     
+    if (urlEl && modalUrl) {
+      modalUrl.textContent = urlEl.textContent;
+    }
+
     if (tagEl) {
       modalTag.textContent = tagEl.textContent;
       modalTag.className = tagEl.className;
@@ -236,12 +243,26 @@ function initPortfolioModal() {
   }
 
   portfolioCards.forEach(card => {
-    card.addEventListener('click', () => openModal(card));
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.portfolio-web-link, .browser-address')) {
+        return;
+      }
+      openModal(card);
+    });
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
+        if (e.target.closest('.portfolio-web-link, .browser-address')) {
+          return;
+        }
         e.preventDefault();
         openModal(card);
       }
+    });
+  });
+
+  document.querySelectorAll('.portfolio-web-link, .browser-address').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
   });
 

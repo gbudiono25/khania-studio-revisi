@@ -1,93 +1,14 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Formulir Permintaan Website — Khania Studio</title>
-<style>
-:root{--n:#0F172A;--n2:#1E293B;--g:#D4AF37;--bg:#F1F5F9;--line:#D9E0E8;--muted:#64748B;--warn:#7C5E00;--wbg:#FFF8DC;--red:#991B1B}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--n);font:15px/1.6 Arial,sans-serif}.wrap{max-width:1040px;margin:auto;padding:22px 15px 60px}
-.hero,.card{background:#fff;border:1px solid var(--line);border-radius:16px}.hero{background:linear-gradient(135deg,var(--n),var(--n2));color:#fff;padding:28px;margin-bottom:16px}.badge{display:inline-block;background:var(--g);color:var(--n);font-weight:800;padding:4px 10px;border-radius:99px;font-size:12px}.hero h1{font-size:29px;margin:12px 0 8px}.hero p{margin:5px 0;color:#DDE5EF}.hero .note{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff}
-.card{padding:21px;margin:15px 0;box-shadow:0 4px 18px rgba(15,23,42,.05)}h2{font-size:20px;margin:0 0 5px}.desc,.hint{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full{grid-column:1/-1}.field{margin-bottom:11px}label{display:block;font-weight:700;font-size:14px;margin-bottom:5px}.req{color:var(--red)}
-input,select,textarea{width:100%;padding:10px;border:1px solid #CBD5E1;border-radius:9px;font:inherit;background:#fff;color:var(--n)}textarea{min-height:90px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid #E9D98B;border-color:var(--g)}
-.note{background:var(--wbg);border:1px solid #E8D88C;color:var(--warn);padding:11px 13px;border-radius:10px;margin:10px 0}.sub{background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:11px;padding:13px;margin:10px 0}.conditional{display:none}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800;cursor:pointer}.primary{background:var(--g);color:var(--n)}.secondary{background:#E2E8F0;color:var(--n)}
-.item{background:#F8FAFC;border:1px solid var(--line);padding:15px;border-radius:11px;margin:10px 0;position:relative}.item h3{margin:0 0 10px;font-size:16px}.delete{position:absolute;right:10px;top:10px;border:0;background:#FEE2E2;color:var(--red);padding:5px 8px;border-radius:7px}.check{display:flex;gap:9px;align-items:flex-start;margin:9px 0}.check input{width:auto;margin-top:5px}.summary{white-space:pre-wrap;background:#F8FAFC;border:1px solid var(--line);padding:12px;border-radius:9px;max-height:360px;overflow:auto;font-size:13px}.hidden{display:none!important}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.kpi{background:#F8FAFC;border:1px solid var(--line);border-radius:9px;padding:10px}.kpi b{display:block;font-size:18px}
-@media(max-width:720px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.kpis{grid-template-columns:1fr}.hero h1{font-size:24px}}
-</style></head><body><div class="wrap">
-<header class="hero"><span class="badge">KHANIA STUDIO</span><h1>Formulir Permintaan Website</h1>
-<p>Isi informasi yang Anda ketahui. <b>Anda tidak perlu memahami hal teknis website.</b></p>
-<p>Khania Studio menggunakan data Anda sebagai dasar untuk menyusun konten, struktur, desain, dan tampilan website.</p>
-<div class="note"><b>Penting:</b> Pertanyaan tambahan akan muncul sesuai paket dan jenis website. Tidak semua bagian wajib diisi semua klien.</div></header>
-
-<form id="f" action="proses-formulir.php" method="POST" enctype="multipart/form-data">
-<section class="card"><h2>1. Paket & Jenis Website</h2><p class="desc">Menentukan kebutuhan informasi yang perlu Anda isi.</p>
-<div class="grid"><div class="field"><label>Paket Website <span class="req">*</span></label><select id="pkg" name="package" required><option value="">-- Pilih --</option><option value="Starter">Starter — Maks. 3 halaman</option><option value="Bronze">Bronze — Maks. 6 halaman</option><option value="Silver">Silver — Maks. 10 halaman</option><option value="Gold">Gold — Maks. 15 halaman</option></select></div>
-<div class="field"><label>Jenis Website <span class="req">*</span></label><select id="type" name="siteType" required><option value="">-- Pilih --</option><option>Landing Page / Promo</option><option>UMKM / Bisnis Lokal</option><option>Company Profile</option><option>Portfolio / Personal Branding</option><option>Jasa Profesional</option><option>Travel / Umroh / Haji</option><option>Restaurant / Café</option><option>Hotel / Hospitality</option><option>Property / Real Estate</option><option>Toko Online Sederhana</option><option>Lainnya</option></select></div></div>
-<div class="kpis"><div class="kpi"><b id="pages">—</b>halaman</div><div class="kpi"><b id="items">—</b>item produk/jasa lengkap</div><div class="kpi"><b id="seo">—</b>artikel SEO</div></div>
-<p class="hint">“Item lengkap” = item yang ditampilkan dengan foto + deskripsi. Bisnis boleh memiliki lebih banyak produk/jasa.</p></section>
-
-<section class="card"><h2>2. Data Pemesan / PIC</h2><p class="desc">Wajib untuk semua proyek.</p><div class="grid">
-<div class="field"><label>Nama Pemesan / PIC <span class="req">*</span></label><input name="pic" required></div><div class="field"><label>Jabatan / Peran <span class="req">*</span></label><input name="picRole" required></div>
-<div class="field"><label>Email <span class="req">*</span></label><input type="email" name="picEmail" required></div><div class="field"><label>WhatsApp <span class="req">*</span></label><input name="picWhatsapp" required placeholder="08xxxxxxxxxx"></div>
-<div class="field"><label>Kota Domisili</label><input name="picCity"></div></div></section>
-
-<section class="card"><h2>3. Informasi Bisnis</h2><p class="desc">Isi berdasarkan fakta bisnis yang ingin ditampilkan.</p><div class="grid">
-<div class="field"><label>Nama Bisnis / Brand <span class="req">*</span></label><input name="businessName" required></div><div class="field"><label>Nama Legal (jika ada)</label><input name="legalName"></div>
-<div class="field"><label>Bidang Usaha <span class="req">*</span></label><input name="businessCategory" required></div><div class="field"><label>Tahun Berdiri</label><input name="foundedYear"></div>
-<div class="field full"><label>Deskripsi bisnis <span class="req">*</span></label><textarea name="businessDescription" required placeholder="Apa yang Anda lakukan, untuk siapa, dan apa yang penting diketahui pelanggan?"></textarea></div>
-<div class="field"><label>Lokasi / Alamat Usaha</label><textarea name="businessAddress"></textarea></div><div class="field"><label>Area Layanan</label><input name="serviceArea"></div>
-<div class="field"><label>Jam Operasional</label><input name="businessHours"></div><div class="field"><label>Pelanggan Utama <span class="req">*</span></label><textarea name="targetAudience" required></textarea></div></div></section>
-
-<section class="card conditional" data-show="Company Profile"><h2>4. Khusus Company Profile</h2><p class="desc">Hanya untuk Company Profile.</p><div class="grid">
-<div class="field full"><label>Sejarah / perjalanan perusahaan</label><textarea name="companyHistory"></textarea></div><div class="field"><label>Visi</label><textarea name="vision"></textarea></div><div class="field"><label>Misi</label><textarea name="mission"></textarea></div>
-<div class="field full"><label>Direksi / Komisaris / Manajemen</label><textarea name="management" placeholder="Nama — Jabatan"></textarea></div><div class="field full"><label>Unit bisnis / divisi</label><textarea name="businessUnits"></textarea></div><div class="field full"><label>Legalitas / sertifikasi / penghargaan / pengalaman</label><textarea name="companyCredentials"></textarea></div></div></section>
-
-<section class="card conditional" data-show="Landing Page / Promo"><h2>5. Khusus Landing Page</h2><p class="desc">Agar landing page fokus pada satu tujuan.</p><div class="grid">
-<div class="field full"><label>Tujuan utama landing page</label><textarea name="landingGoal" placeholder="Lead WhatsApp / booking / penjualan / pendaftaran / penawaran"></textarea></div><div class="field full"><label>Penawaran utama</label><textarea name="landingOffer"></textarea></div><div class="field full"><label>CTA utama</label><input name="landingCTA"></div></div></section>
-
-<section class="card"><h2>6. Produk / Jasa</h2><p class="desc">Tambahkan semua item yang ingin Anda catat. Form memberi tanda kuota tampilan lengkap sesuai paket.</p><div id="list"></div><button type="button" class="btn btn-secondary" id="add">+ Tambah Produk/Jasa</button>
-<div class="note"><b>Aturan:</b> Produk/jasa boleh ditampilkan semua. Yang dibatasi paket adalah jumlah item yang mendapat foto + deskripsi lengkap. Maksimal deskripsi setiap item 3 paragraf.</div></section>
-
-<section class="card"><h2>7. Keunggulan, Masalah & Solusi</h2><div class="field"><label>Keunggulan utama <span class="req">*</span></label><textarea name="advantages" required></textarea></div><div class="field"><label>Masalah / kebutuhan pelanggan</label><textarea name="customerProblems"></textarea></div><div class="field"><label>Bagaimana bisnis Anda menyelesaikannya?</label><textarea name="solution"></textarea></div><div class="field"><label>Keraguan / pertanyaan calon pelanggan</label><textarea name="objections"></textarea></div></section>
-
-<section class="card"><h2>8. Identitas Brand & Referensi Desain</h2><p class="desc">Tidak wajib tahu semuanya. Pilih “Belum tahu” bila ingin Khania Studio membantu.</p><div class="grid">
-<div class="field"><label>Warna utama</label><input name="brandColors" placeholder="Contoh: hijau, putih / belum tahu"></div><div class="field"><label>Warna yang dihindari</label><input name="avoidColors"></div>
-<div class="field"><label>Gaya font</label><input name="fontStyle" placeholder="Modern / elegan / friendly / belum tahu"></div><div class="field"><label>Gaya visual</label><select name="visualStyle"><option>Belum tahu — mohon dibantu</option><option>Modern</option><option>Minimalis</option><option>Elegan</option><option>Profesional</option><option>Friendly</option><option>Bold</option><option>Luxury</option><option>Playful</option></select></div>
-<div class="field full"><label>Link website referensi</label><input type="url" name="referenceUrl" placeholder="https://..."></div><div class="field full"><label>Bagian referensi yang disukai</label><textarea name="referenceNotes"></textarea></div><div class="field full"><label>Screenshot / file referensi</label><input type="file" name="referenceFiles" accept="image/*,.pdf" multiple></div></div>
-<div class="detail note"><b>Belum punya referensi?</b> Tidak masalah. Jelaskan bisnis dan karakter yang Anda inginkan. Khania Studio dapat membantu menentukan konsep, layout, warna utama, dan gaya font.</div></section>
-
-<section class="card"><h2>9. Pesan Utama Website</h2><div class="field"><label>Headline</label><input name="headline"></div><div class="field"><label>Subheadline</label><textarea name="subheadline"></textarea></div><div class="field"><label>CTA utama <span class="req">*</span></label><input name="primaryCTA" required></div></section>
-
-<section class="card conditional" data-show="Travel / Umroh / Haji"><h2>10. Khusus Travel / Umroh / Haji</h2><div class="field"><label>Paket perjalanan</label><textarea name="travelPackages"></textarea></div><div class="field"><label>Legalitas / izin yang ingin ditampilkan</label><textarea name="travelLicenses"></textarea></div><div class="field"><label>Fasilitas / layanan / bimbingan</label><textarea name="travelFacilities"></textarea></div><div class="field"><label>Alur pendaftaran / pembayaran</label><textarea name="travelPayment"></textarea></div></section>
-
-<section class="card conditional" data-show="Restaurant / Café"><h2>11. Khusus Restoran / Café</h2><div class="grid"><div class="field full"><label>Menu / kategori menu</label><textarea name="restaurantMenu"></textarea></div><div class="field"><label>Rentang harga</label><input name="restaurantPrice"></div><div class="field"><label>Reservasi / pemesanan</label><input name="restaurantBooking"></div></div></section>
-
-<section class="card conditional" data-show="Hotel / Hospitality"><h2>12. Khusus Hotel / Hospitality</h2><div class="grid"><div class="field full"><label>Tipe kamar</label><textarea name="hotelRooms"></textarea></div><div class="field full"><label>Fasilitas & layanan</label><textarea name="hotelFacilities"></textarea></div><div class="field"><label>Jumlah kamar / kapasitas</label><input name="hotelCapacity"></div><div class="field"><label>Reservasi</label><input name="hotelBooking"></div></div></section>
-
-<section class="card conditional" data-show="Property / Real Estate"><h2>13. Khusus Properti / Real Estate</h2><div class="grid"><div class="field"><label>Nama proyek</label><input name="propertyProject"></div><div class="field"><label>Lokasi proyek</label><input name="propertyLocation"></div><div class="field"><label>Luas kawasan</label><input name="propertyArea"></div><div class="field"><label>Jumlah unit</label><input name="propertyUnits"></div><div class="field full"><label>Tipe unit / rumah</label><textarea name="propertyTypes"></textarea></div><div class="field full"><label>Fasilitas / spesifikasi</label><textarea name="propertyFacilities"></textarea></div><div class="field full"><label>Legalitas / status proyek yang boleh dipublikasikan</label><textarea name="propertyLegal"></textarea></div></div></section>
-
-<section class="card"><h2>14. Kredibilitas & Testimonial</h2><div class="field"><label>Legalitas / sertifikasi / penghargaan / pengalaman / bukti kredibilitas</label><textarea name="credentials"></textarea></div><div class="field"><label>Testimonial pelanggan nyata</label><textarea name="testimonials"></textarea></div><div class="field"><label>Foto pemberi testimonial (opsional)</label><input type="file" name="testimonialPhoto" accept="image/*"></div><p class="hint">Gunakan nama/foto hanya bila Anda mempunyai izin.</p></section>
-
-<section class="card"><h2>15. Logo, Foto, Video & Dokumen</h2><p class="desc">Prioritaskan aset asli bisnis.</p><div class="field"><label>Logo</label><input type="file" name="logo" accept="image/*,.svg"></div><div class="field"><label>Foto bisnis / produk / jasa / fasilitas / tim</label><input type="file" name="businessImages" accept="image/*" multiple></div><div class="field"><label>Video</label><input type="file" name="videos" accept="video/*" multiple></div><div class="field"><label>Dokumen pendukung</label><input type="file" name="documents" accept=".pdf,.doc,.docx,.xls,.xlsx" multiple></div></section>
-
-<section class="card"><h2>16. Kontak, Sosial Media & Lokasi</h2><div class="grid"><div class="field"><label>Nama/PIC WhatsApp bisnis</label><input name="bizWaPic"></div><div class="field"><label>WhatsApp bisnis</label><input name="bizWa"></div><div class="field"><label>Nama/PIC telepon</label><input name="phonePic"></div><div class="field"><label>Telepon</label><input name="phone"></div><div class="field"><label>Email bisnis</label><input type="email" name="bizEmail"></div><div class="field"><label>Instagram</label><input name="instagram"></div><div class="field"><label>Facebook</label><input name="facebook"></div><div class="field"><label>TikTok</label><input name="tiktok"></div><div class="field"><label>YouTube</label><input name="youtube"></div><div class="field"><label>Google Maps</label><input name="maps"></div><div class="field full"><label>Alamat lengkap untuk website</label><textarea name="publicAddress"></textarea></div></div></section>
-
-<section class="card"><h2>17. SEO</h2><p class="desc">Terutama penting untuk Silver dan Gold. Anda tidak perlu memahami SEO.</p><div class="grid"><div class="field full"><label>Keyword yang sudah diketahui</label><textarea name="keywords" placeholder="Contoh: laundry kiloan Bekasi, laundry express Jatiasih."></textarea></div><div class="field"><label>Kota / area target</label><input name="seoLocation"></div><div class="field"><label>Pesaing / website pembanding</label><input name="competitors"></div><div class="field full"><label>Topik artikel yang diinginkan (opsional)</label><textarea name="seoTopics"></textarea></div></div><div class="note"><b>Catatan:</b> Keyword dan arah bisnis berasal dari klien; penulisan artikel SEO dilakukan oleh Khania Studio sesuai paket.</div></section>
-
-<section class="card"><h2>18. Informasi Tambahan</h2><textarea name="specialRequests" placeholder="Tuliskan hal lain yang perlu kami ketahui."></textarea></section>
-
-<section class="card"><h2>19. Periksa & Konfirmasi</h2><div class="note"><b>READY FOR PRODUCTION:</b> Jam produksi mulai dihitung setelah data, materi, scope, dan keputusan desain yang diperlukan lengkap dan disepakati oleh Khania Studio.</div>
-<label class="check"><input type="checkbox" required><span>Saya menyatakan informasi yang saya berikan benar dan saya berwenang memberikan informasi/aset tersebut.</span></label>
-<label class="check"><input type="checkbox" required><span>Saya memahami bahwa data formulir menjadi dasar pengerjaan website dan perubahan setelah disepakati dapat diperlakukan sebagai revisi sesuai ketentuan paket.</span></label>
-<label class="check"><input type="checkbox" required><span>Saya memahami Khania Studio dapat membantu menyusun copy dan arah desain, tetapi tidak boleh mengarang fakta bisnis yang tidak saya berikan.</span></label>
-<label class="check"><input type="checkbox" required><span>Saya telah membaca dan menyetujui ketentuan pembuatan website Khania Studio yang berlaku.</span></label>
-<div class="field"><label>Nama sebagai tanda persetujuan <span class="req">*</span></label><input name="approvalName" required></div>
-<div class="actions"><button type="button" class="btn secondary" id="check">Periksa Data</button><button type="submit" class="btn primary">Kirim Formulir</button></div><div id="summary" class="summary hidden"></div><div id="status" class="status"></div></section>
-</form></div>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0;url=formulir-permintaan-website-khania-studio-v3.html">
+<title>Redirecting to Client Website Brief Form V3 — Khania Studio</title>
 <script>
-const rules={Starter:[3,1,0],Bronze:[6,3,0],Silver:[10,6,5],Gold:[15,10,10]};
-const f=document.getElementById('f'),pkg=document.getElementById('pkg'),type=document.getElementById('type'),list=document.getElementById('list');
-function updatePkg(){const r=rules[pkg.value]||['—','—','—'];pages.textContent=r[0];items.textContent=r[1];seo.textContent=r[2];[...list.children].forEach((d,i)=>{const l=rules[pkg.value]?.[1]||0;d.querySelector('.scope').textContent=i<l?'Termasuk kuota tampilan lengkap paket':'Di luar kuota tampilan lengkap — dapat diproses sebagai item tambahan';});}
-function addItem(){const n=list.children.length+1,d=document.createElement('div');d.className='item';d.innerHTML='<button type="button" class="delete">Hapus</button><h3>Produk/Jasa '+n+'</h3><div class="sub"><b class="scope">Pilih paket terlebih dahulu</b></div><div class="grid"><div class="field"><label>Nama Produk/Jasa <span class="req">*</span></label><input name="productName[]" required></div><div class="field"><label>Harga</label><input name="productPrice[]"></div><div class="field full"><label>Deskripsi (maks. 3 paragraf)</label><textarea name="productDescription[]"></textarea></div><div class="field full"><label>Keunggulan/Manfaat</label><textarea name="productBenefit[]"></textarea></div><div class="field full"><label>Foto Produk/Jasa</label><input type="file" name="productImage[]" accept="image/*"></div></div>';d.querySelector('.delete').onclick=()=>{d.remove();updatePkg()};list.appendChild(d);updatePkg();}
-document.querySelectorAll('.conditional').forEach(s=>s.dataset.requiredType=s.dataset.show);
-function toggle(){document.querySelectorAll('.conditional').forEach(s=>s.style.display=s.dataset.requiredType===type.value?'block':'none')}
-function preview(){if(!f.checkValidity()){f.reportValidity();return}summary.textContent=[...new FormData(f)].map(([k,v])=>v instanceof File?(v.name?k+': '+v.name:''):v?k+': '+v:'').filter(Boolean).join('\n');summary.classList.remove('hidden');summary.scrollIntoView({behavior:'smooth'})}
-pkg.onchange=updatePkg;type.onchange=toggle;document.getElementById('add').onclick=addItem;document.getElementById('check').onclick=preview;f.onsubmit=e=>{if(!f.checkValidity()){e.preventDefault();f.reportValidity();return}status.textContent='Data sedang dikirim ke Khania Studio.';status.className='status ok'};addItem();updatePkg();toggle();
-</script></body></html>
+window.location.href = "formulir-permintaan-website-khania-studio-v3.html";
+</script>
+</head>
+<body>
+<p>Formulir telah diperbarui ke V3. Jika Anda tidak diarahkan secara otomatis, <a href="formulir-permintaan-website-khania-studio-v3.html">klik di sini untuk membuka Formulir V3</a>.</p>
+</body>
+</html>
