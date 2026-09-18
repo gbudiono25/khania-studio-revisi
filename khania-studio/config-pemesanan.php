@@ -4,6 +4,6 @@
 const SMTP_HOST = 'khania-studio.com';
 const SMTP_PORT = 587;
 const SMTP_USERNAME = 'admin@khania-studio.com';
-const SMTP_PASSWORD = 'ISI_PASSWORD_EMAIL_DI_SERVER';
+const SMTP_PASSWORD = 'Gb130866@567';
 const ADMIN_EMAIL = 'admin@khania-studio.com';
 const INTERNAL_CC = 'gbudiono.25@gmail.com';
