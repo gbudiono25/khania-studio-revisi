@@ -14,6 +14,11 @@ ini_set('display_errors', '0');
 
 // SMTP configuration is stored separately so the password is not duplicated in this script.
 require_once __DIR__ . '/config-pemesanan.php';
+require_once __DIR__ . '/lib/SupabaseClient.php';
+
+use KhaniaStudio\SupabaseClient;
+
+$supabase = new SupabaseClient();
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -460,21 +465,36 @@ $subtotal = $base + $setup;
 // Never trust the browser's total/discount. Voucher verification is repeated server-side.
 $voucherDiscount = 0;
 $voucherUsed = '';
-$voucherFile = __DIR__ . '/data/vouchers.json';
-if ($voucherCode !== '' && is_file($voucherFile)) {
-    $list = json_decode((string)file_get_contents($voucherFile), true);
-    if (is_array($list)) {
-        foreach ($list as $v) {
-            if (strtoupper((string)($v['code'] ?? '')) !== $voucherCode || ($v['active'] ?? true) === false) continue;
-            $today = date('Y-m-d');
-            if (!empty($v['start']) && $today < $v['start']) continue;
-            if (!empty($v['end']) && $today > $v['end']) continue;
-            $allowed = $v['packages'] ?? [];
-            if (is_array($allowed) && count($allowed) && !in_array($package, $allowed, true)) continue;
-            if (($v['type'] ?? 'amount') === 'percent') $voucherDiscount = min($subtotal, (int)round($subtotal * min(100, max(0,(float)($v['value'] ?? 0))) / 100));
-            else $voucherDiscount = min($subtotal, max(0,(int)($v['value'] ?? 0)));
-            $voucherUsed = $voucherCode;
-            break;
+
+if ($voucherCode !== '' && $supabase->isConfigured()) {
+    // Primary: validate voucher from Supabase
+    $packageMap = ['Starter'=>'starter','Bronze'=>'bronze','Silver'=>'silver','Gold'=>'gold'];
+    $pkgCode = $packageMap[$package] ?? strtolower($package);
+    $result = $supabase->validateVoucher($voucherCode, $pkgCode, $subtotal);
+    if ($result) {
+        $voucherDiscount = $result['discount_amount'] ?? 0;
+        $voucherUsed = $voucherCode;
+    }
+}
+
+// Fallback: validate voucher from local JSON if Supabase is unavailable
+if ($voucherCode !== '' && $voucherUsed === '' && !$supabase->isConfigured()) {
+    $voucherFile = __DIR__ . '/data/vouchers.json';
+    if (is_file($voucherFile)) {
+        $list = json_decode((string)file_get_contents($voucherFile), true);
+        if (is_array($list)) {
+            foreach ($list as $v) {
+                if (strtoupper((string)($v['code'] ?? '')) !== $voucherCode || ($v['active'] ?? true) === false) continue;
+                $today = date('Y-m-d');
+                if (!empty($v['start']) && $today < $v['start']) continue;
+                if (!empty($v['end']) && $today > $v['end']) continue;
+                $allowed = $v['packages'] ?? [];
+                if (is_array($allowed) && count($allowed) && !in_array($package, $allowed, true)) continue;
+                if (($v['type'] ?? 'amount') === 'percent') $voucherDiscount = min($subtotal, (int)round($subtotal * min(100, max(0,(float)($v['value'] ?? 0))) / 100));
+                else $voucherDiscount = min($subtotal, max(0,(int)($v['value'] ?? 0)));
+                $voucherUsed = $voucherCode;
+                break;
+            }
         }
     }
 }
@@ -498,25 +518,100 @@ if (!isset($_FILES['paymentProof']) || $_FILES['paymentProof']['error'] !== UPLO
 $file = $_FILES['paymentProof'];
 if ((int)$file['size'] <= 0 || (int)$file['size'] > MAX_FILE_SIZE) fail('Bukti transfer maksimal 10 MB.');
 $ext = strtolower(pathinfo((string)$file['name'], PATHINFO_EXTENSION));
-$allowed = ['jpg','jpeg','png','webp','pdf'];
-if (!in_array($ext, $allowed, true)) fail('Format bukti transfer harus JPG, PNG, WEBP, atau PDF.');
+$allowedExts = ['jpg','jpeg','png','webp','pdf'];
+if (!in_array($ext, $allowedExts, true)) fail('Format bukti transfer harus JPG, PNG, WEBP, atau PDF.');
+
+// Local upload (for email attachment fallback)
 $uploadDir = __DIR__ . '/data/order-proofs';
 if (!is_dir($uploadDir) && !mkdir($uploadDir, 0750, true)) fail('Folder penyimpanan bukti pembayaran tidak dapat dibuat.', 500);
 $safeName = $orderId . '-' . preg_replace('/[^A-Za-z0-9._-]/','_',basename((string)$file['name']));
 $proofPath = $uploadDir . '/' . $safeName;
 if (!move_uploaded_file($file['tmp_name'], $proofPath)) fail('Bukti transfer gagal disimpan. Silakan coba lagi.', 500);
 
+// Store order record (Supabase primary, local JSON fallback)
 $record = [
   'orderId'=>$orderId,'createdAt'=>$now->format(DateTime::ATOM),'orderDate'=>$orderDate,'dueDate'=>$dueDate,
   'package'=>$package,'base'=>$base,'setup'=>$setup,'voucher'=>$voucherUsed,'discount'=>$voucherDiscount,'total'=>$total,
   'customerName'=>$name,'businessName'=>$business,'whatsapp'=>$wa,'email'=>$email,'domain'=>$domain,
   'paymentDate'=>$paymentDate,'paymentProof'=>$safeName,'status'=>'Menunggu Verifikasi Pembayaran'
 ];
-$dataFile = __DIR__ . '/data/orders.json';
-$orders = is_file($dataFile) ? json_decode((string)file_get_contents($dataFile), true) : [];
-if (!is_array($orders)) $orders=[];
-$orders[]=$record;
-if (@file_put_contents($dataFile, json_encode($orders, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE), LOCK_EX) === false) fail('Data pesanan tidak dapat disimpan.', 500);
+
+$supabaseError = null;
+
+if ($supabase->isConfigured()) {
+    $fileContent = file_get_contents($proofPath);
+    $fileMime = 'application/octet-stream';
+    if ($ext === 'jpg' || $ext === 'jpeg') $fileMime = 'image/jpeg';
+    elseif ($ext === 'png') $fileMime = 'image/png';
+    elseif ($ext === 'webp') $fileMime = 'image/webp';
+    elseif ($ext === 'pdf') $fileMime = 'application/pdf';
+
+    $storageBucket = $supabase->getPaymentProofsBucket() ?: 'order-proofs';
+    $storagePath = $orderId . '/' . $safeName;
+    $uploadResult = $supabase->uploadFile($storageBucket, $storagePath, $fileContent, $fileMime);
+
+    $paymentProofUrl = null;
+    if ($uploadResult['status'] >= 200 && $uploadResult['status'] < 300) {
+        $paymentProofUrl = $storagePath;
+    }
+
+    $packageMap = ['Starter'=>'starter','Bronze'=>'bronze','Silver'=>'silver','Gold'=>'gold'];
+    $pkgCode = $packageMap[$package] ?? strtolower($package);
+    $pkgRecord = $supabase->findPackage($pkgCode);
+    $packageId = $pkgRecord['id'] ?? null;
+
+    $clientId = $supabase->findOrCreateClient([
+        'full_name'     => $name,
+        'business_name' => $business,
+        'whatsapp'      => $wa,
+        'email'         => $email,
+        'domain'        => $domain ?: null,
+    ]);
+
+    if ($clientId && $packageId) {
+        $orderPayload = [
+            'order_number'    => $orderId,
+            'client_id'       => $clientId,
+            'package_id'      => $packageId,
+            'order_date'      => $orderDate,
+            'due_date'        => $dueDate,
+            'base_price'      => $base,
+            'setup_fee'       => $setup,
+            'voucher_code'    => $voucherUsed ?: null,
+            'voucher_discount' => $voucherDiscount,
+            'total_amount'    => $total,
+            'status'          => 'pending_payment',
+            'notes'           => 'Order via website (pemesanan.html)',
+        ];
+        $orderRecord = $supabase->insert('orders', $orderPayload);
+
+        if ($orderRecord && isset($orderRecord['id'])) {
+            $paymentPayload = [
+                'order_id'     => $orderRecord['id'],
+                'payment_date' => $paymentDate,
+                'amount'       => $total,
+                'proof_path'   => $paymentProofUrl ?: $safeName,
+                'status'       => 'pending',
+            ];
+            $supabase->insert('payments', $paymentPayload);
+        }
+    } else {
+        $supabaseError = 'Gagal membuat record client/order di Supabase.';
+    }
+}
+
+// Fallback: save to local JSON if Supabase is unavailable or failed
+if (!$supabase->isConfigured() || $supabaseError) {
+    $dataFile = __DIR__ . '/data/orders.json';
+    $orders = is_file($dataFile) ? json_decode((string)file_get_contents($dataFile), true) : [];
+    if (!is_array($orders)) $orders = [];
+    $orders[] = $record;
+    if (@file_put_contents($dataFile, json_encode($orders, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE), LOCK_EX) === false) {
+        error_log('Khania Studio Order: Failed to write to local JSON fallback.');
+    }
+} else {
+    error_log('Khania Studio Order: Saved to Supabase. ' . ($supabaseError ?: ''));
+}
 
 $subject = 'Pesanan Website ' . $orderId . ' — ' . $package . ' — ' . $business;
 $bodyText = "KHANIA STUDIO — PESANAN WEBSITE\r\n\r\n";

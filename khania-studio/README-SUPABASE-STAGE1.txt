@@ -16,10 +16,24 @@ PENTING:
 - Voucher tidak boleh dibaca langsung dari tabel oleh browser publik. Validasi voucher sebaiknya dilakukan server-side/Edge Function agar kode voucher dan aturan penggunaannya tidak mudah dimanipulasi.
 
 LANGKAH BERIKUTNYA:
-A. Pak Gembong meninjau schema.sql.
-B. Setelah struktur disetujui, kita hubungkan website dengan Supabase.
+A. Pak Gembong meninjau schema.sql. [SELESAI]
+B. Setelah struktur disetujui, kita hubungkan website dengan Supabase. [SELESAI — Stage 2]
 C. Baru dibuat Login/Register/Forgot Password.
 D. Setelah itu Admin Panel dan Client Area.
+
+=== STAGE 2 INTEGRATION (SELESAI) ===
+Stage 2 sudah selesai. Berkas-berkas berikut telah ditambahkan/modifikasi:
+- lib/env.php              : Loader .env untuk PHP
+- lib/SupabaseClient.php   : Klien PHP REST API + Storage API + RPC untuk Supabase
+- api/packages.php         : API ambil daftar paket dari Supabase
+- api/validate-voucher.php : API validasi voucher via RPC (aman, tidak expose tabel)
+- proses-pemesanan.php     : Simpan order/client/payment ke Supabase + upload bukti transfer ke Storage
+- proses-formulir.php      : Simpan client brief ke Supabase + upload lampiran ke Storage
+- js/pemesanan.js          : Fetch paket & validasi voucher via API (bukan JSON lokal)
+- supabase-schema-migration-2.sql : INSERT policies + RPC functions (validate_voucher, get_package_by_code, get_active_packages)
+- README-SUPABASE-STAGE2.md : Panduan lengkap setup & testing
+
+Lihat README-SUPABASE-STAGE2.md untuk langkah-langkah penempatan schema, pembuatan bucket Storage, dan testing.
 
 CATATAN KEAMANAN PENTING:
 Versi pemesanan lama masih menerima beberapa nilai harga melalui hidden input HTML. Untuk produksi, harga final harus selalu dihitung ulang di server berdasarkan package_id/code yang tersimpan di database. Browser tidak boleh dipercaya untuk menentukan harga.

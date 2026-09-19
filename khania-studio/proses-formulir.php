@@ -427,6 +427,12 @@ function fail($message, $status = 400) {
     exit;
 }
 
+require_once __DIR__ . '/lib/SupabaseClient.php';
+
+use KhaniaStudio\SupabaseClient;
+
+$supabase = new SupabaseClient();
+
 /* SECURITY FIX: REMOVE PUBLIC DIAGNOSTIC DASHBOARD ON GET REQUESTS */
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: formulir-permintaan-website-khania-studio-v3.html');
@@ -729,6 +735,141 @@ $sections = [
         'Nama Persetujuan' => $approvalName,
     ],
 ];
+
+/* Save brief submission to Supabase (if configured) */
+$briefSaved = false;
+if ($supabase->isConfigured()) {
+    $packageMap = ['Starter'=>'starter','Bronze'=>'bronze','Silver'=>'silver','Gold'=>'gold'];
+    $pkgCode = $packageMap[$package] ?? strtolower($package);
+    $pkgRecord = $supabase->findPackage($pkgCode);
+
+    $clientId = $supabase->findOrCreateClient([
+        'full_name'     => $pic,
+        'business_name' => $businessName,
+        'whatsapp'      => $picWhatsapp,
+        'email'         => $picEmail,
+        'domain'        => post('existingDomain') ?: post('desiredDomain'),
+    ]);
+
+    $orderPayload = [
+        'order_number'  => $submissionId,
+        'client_id'     => $clientId,
+        'package_id'    => $pkgRecord['id'] ?? null,
+        'order_date'    => date('Y-m-d'),
+        'due_date'      => (new DateTime('+2 days', new DateTimeZone('Asia/Jakarta')))->format('Y-m-d H:i:s'),
+        'base_price'    => $pkgRecord['base_price'] ?? 0,
+        'setup_fee'     => $pkgRecord['setup_fee'] ?? 0,
+        'total_amount'  => $pkgRecord ? ($pkgRecord['base_price'] + $pkgRecord['setup_fee']) : 0,
+        'status'        => 'pending_payment',
+        'notes'         => 'Brief V3 submission via formulir-permintaan-website-khania-studio-v3.html',
+    ];
+    $orderRecord = $supabase->insert('orders', $orderPayload);
+
+    if ($orderRecord && isset($orderRecord['id'])) {
+        $briefData = [
+            'package'               => $package,
+            'site_type'             => $siteType,
+            'pic'                   => $pic,
+            'pic_role'              => $picRole,
+            'pic_email'             => $picEmail,
+            'pic_whatsapp'          => $picWhatsapp,
+            'pic_city'              => $picCity,
+            'business_name'         => $businessName,
+            'business_category'     => $businessCategory,
+            'business_description'  => $businessDescription,
+            'target_audience'       => $targetAudience,
+            'approval_name'         => $approvalName,
+            'legal_name'            => post('legalName'),
+            'founded_year'          => post('foundedYear'),
+            'service_area'          => post('serviceArea'),
+            'business_hours'        => post('businessHours'),
+            'business_address'      => post('businessAddress'),
+            'primary_goal'          => post('primaryGoal'),
+            'secondary_goals'       => postArray('secondaryGoals'),
+            'structure_choice'      => post('structureChoice'),
+            'proposed_structure'    => post('proposedStructure'),
+            'features'              => postArray('features'),
+            'has_domain'            => post('hasDomain'),
+            'existing_domain'       => post('existingDomain'),
+            'desired_domain'        => post('desiredDomain'),
+            'has_existing_site'     => post('hasExistingSite'),
+            'old_site_url'          => post('oldSiteUrl'),
+            'keep_old'              => post('keepOld'),
+            'change_old'            => post('changeOld'),
+            'job_type'              => post('jobType'),
+            'featured_product'      => $featuredProduct,
+            'products'              => $products,
+            'color_choice'          => post('colorChoice'),
+            'brand_colors'          => post('brandColors'),
+            'avoid_colors'          => post('avoidColors'),
+            'font_choice'          => post('fontChoice'),
+            'font_style'           => post('fontStyle'),
+            'visual_style'          => postArray('visualStyle'),
+            'reference_status'      => post('referenceStatus'),
+            'reference_url'         => post('referenceUrl'),
+            'liked_parts'           => postArray('likedParts'),
+            'headline'              => post('headline'),
+            'subheadline'           => post('subheadline'),
+            'primary_cta'           => post('primaryCTA'),
+            'industry_data'         => [
+                'laundry'    => post('laundryServiceTypes'),
+                'restaurant' => post('restaurantMenu'),
+                'hotel'      => post('hotelRooms'),
+                'property'   => post('propertyProject'),
+                'travel'     => post('travelPackages'),
+            ],
+            'credentials'           => post('credentials'),
+            'testimonials'          => post('testimonials'),
+            'contact_info'          => [
+                'whatsapp_business' => post('bizWa'),
+                'wa_pic'            => post('bizWaPic'),
+                'phone'             => post('phone'),
+                'email_business'    => post('bizEmail'),
+                'instagram'         => post('instagram'),
+                'facebook'          => post('facebook'),
+                'tiktok'            => post('tiktok'),
+                'google_maps'       => post('maps'),
+                'public_address'    => post('publicAddress'),
+                'primary_contact'   => post('primaryContact'),
+            ],
+            'seo'                   => [
+                'keywords'      => post('keywords'),
+                'seo_location'  => post('seoLocation'),
+                'competitors'   => post('competitors'),
+                'seo_topics'    => post('seoTopics'),
+                'seo_assist'    => post('seoAssist'),
+            ],
+            'asset_consent'         => post('assetConsent') === 'on' ? 'on' : '',
+        ];
+
+        $briefRecord = $supabase->insert('website_briefs', [
+            'order_id'    => $orderRecord['id'],
+            'client_id'   => $clientId,
+            'data'        => $briefData,
+            'submitted_at' => date('c'),
+            'status'      => 'submitted',
+        ]);
+
+        // Upload attachments to Supabase Storage
+        if ($attachments) {
+            $storageBucket = $supabase->getClientFilesBucket() ?: 'client-files';
+            foreach ($attachments as $idx => $a) {
+                $fileContent = file_get_contents($a['path']);
+                if ($fileContent !== false) {
+                    $storagePath = $submissionId . '/file_' . $idx . '_' . basename($a['name']);
+                    $supabase->uploadFile($storageBucket, $storagePath, $fileContent, $a['type']);
+                }
+            }
+        }
+
+        $briefSaved = true;
+        error_log('Khania Studio Brief: Saved submission ' . $submissionId . ' to Supabase.');
+    } else {
+        error_log('Khania Studio Brief: Failed to create order record in Supabase.');
+    }
+} else {
+    error_log('Khania Studio Brief: Supabase not configured, skipping database save.');
+}
 
 /* Build Plain Text Body */
 $bodyText = "KHANIA STUDIO — CLIENT WEBSITE BRIEF V3\r\n";
