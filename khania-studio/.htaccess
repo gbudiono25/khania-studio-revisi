@@ -1,3 +1,8 @@
-<FilesMatch "^(config-pemesanan\.php|data/.*)$">
+# Protect server-side configuration and local data
+<FilesMatch "^(\.env|config-pemesanan\.php)$">
+  Require all denied
+</FilesMatch>
+
+<FilesMatch "^data/.*$">
   Require all denied
 </FilesMatch>

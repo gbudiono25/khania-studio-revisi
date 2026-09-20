@@ -7,7 +7,7 @@ This stage connects the Khania Studio PHP website to your Supabase project so th
 ## 0. Prerequisites
 
 - A Supabase project (URL + anon key already in `.env`)
-- PHP 7.4+ with the `curl` extension enabled on your hosting
+- PHP 7.4+ (PHP 8.1/8.2 recommended) with the `curl` extension enabled on your hosting
 - Write access to create directories in the project
 
 ## 1. Apply the Database Schema
@@ -47,6 +47,8 @@ This is **server-side only** — the key never reaches the browser.
 If left empty, the system falls back to the anon key with the INSERT policies from Step 1.
 
 ## 4. Verify .env
+
+**Important:** `.env` is server-side only and must never be directly accessible from the browser. The supplied `.htaccess` blocks it. Do not paste the service role key into any HTML/JS file.
 
 Ensure your `.env` file contains:
 
