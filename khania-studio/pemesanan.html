@@ -35,7 +35,7 @@
     <div class="container order-container">
       <span class="badge-pill badge-gold">PEMESANAN WEBSITE</span>
       <h1 class="order-title">Formulir Pemesanan Website</h1>
-      <p class="order-subtitle">Lengkapi data pemesanan dan lakukan pembayaran sesuai paket yang Anda pilih.</p>
+      <p class="order-subtitle">Lengkapi data pemesanan. Setelah pesanan dikirim, Khania Studio akan mengirimkan invoice dan informasi pembayaran.</p>
       <div class="order-note"><strong>Belum yakin dengan paketnya?</strong> Anda tetap dapat berkonsultasi dengan Khania Studio melalui WhatsApp sebelum melakukan pembayaran.</div>
     </div>
   </section>
@@ -45,9 +45,9 @@
       <input type="hidden" name="package" id="packageInput">
       <input type="hidden" name="packageBase" id="packageBaseInput">
       <input type="hidden" name="setupFee" id="setupFeeInput">
-      <input type="hidden" name="orderTotal" id="orderTotalInput">
-      <input type="hidden" name="orderDate" id="orderDateInput">
-      <input type="hidden" name="dueDate" id="dueDateInput">
+      
+      
+      
       <input type="hidden" name="voucherCode" id="voucherCodeInput">
       <input type="hidden" name="voucherDiscount" id="voucherDiscountInput">
 
@@ -105,23 +105,20 @@
 
       <section class="order-card">
         <div class="section-kicker">04</div>
-        <h2>Pembayaran</h2>
-        <p class="section-desc">Silakan transfer sesuai total pembayaran ke rekening Khania Studio.</p>
+        <h2>Informasi Pembayaran</h2>
+        <p class="section-desc">Silakan transfer sesuai total pembayaran ke rekening Khania Studio setelah invoice diterima.</p>
         <div class="bank-card">
           <div><span>Nama Bank</span><strong>Bank BCA</strong></div>
           <div class="account-row"><span>Nomor Rekening</span><div class="account-value"><strong id="accountNumber">6755-538-381</strong><button type="button" class="copy-account" id="copyAccount">Salin Nomor Rekening</button></div></div>
           <div><span>Atas Nama</span><strong>Gembong Budiono</strong></div>
-          <div class="transfer-note"><span>Berita Transfer</span><strong id="transferNote">[Paket] atas nama [Nama Pemesan]</strong></div>
+          <div class="transfer-note"><span>Berita Transfer</span><div class="account-value"><strong id="transferNote">[Paket] atas nama [Nama Pemesan]</strong><button type="button" class="copy-account" id="copyTransferNote">Salin Berita Transfer</button></div></div>
         </div>
-
-        <div class="field"><label for="paymentDate">Tanggal Pembayaran <span>*</span></label><input id="paymentDate" name="paymentDate" type="date" required></div>
-        <div class="field"><label for="paymentProof">Bukti Transfer <span>*</span></label><input id="paymentProof" name="paymentProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required><div class="hint">JPG, PNG, WEBP, atau PDF. Maksimal 10 MB.</div></div>
+        <div class="hint">Pembayaran dan bukti transfer dikirim melalui halaman <strong>Konfirmasi Pembayaran</strong> setelah pesanan berhasil dibuat.</div>
       </section>
 
       <section class="order-card confirmation-card">
         <div class="consent-row"><label><input type="checkbox" id="consentInfo" required> Saya telah membaca informasi paket yang dipilih dan memahami rincian harga serta layanan yang tercantum.</label></div>
-        <div class="consent-row"><label><input type="checkbox" id="consentBrief" required> Saya memahami bahwa setelah pembayaran terverifikasi, Khania Studio akan mengirimkan link untuk mengisi Form Brief Website.</label></div>
-        <button type="submit" class="btn btn-gold order-submit" id="submitOrder">Kirim Pesanan &amp; Konfirmasi Pembayaran</button>
+        <button type="submit" class="btn btn-gold order-submit" id="submitOrder">Kirim Pemesanan Website</button>
       </section>
     </form>
 

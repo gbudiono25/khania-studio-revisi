@@ -1,8 +1,5 @@
-# Protect server-side configuration and local data
-<FilesMatch "^(\.env|config-pemesanan\.php)$">
+<FilesMatch "^(config-pemesanan\.php|\.env)$">
   Require all denied
 </FilesMatch>
 
-<FilesMatch "^data/.*$">
-  Require all denied
-</FilesMatch>
+# Folder /data and /data/order-proofs are protected by their own .htaccess files.

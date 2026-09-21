@@ -8,3 +8,4 @@
 .copy-account{position:static;margin:0;padding:.48rem .75rem;border:1px solid currentColor;border-radius:8px;background:transparent;cursor:pointer;font:inherit;font-size:.82rem;font-weight:700}
 .transfer-note{padding-top:.7rem;margin-top:.25rem;border-top:1px dashed rgba(15,23,42,.15)}
 @media (max-width:600px){.account-row .account-value{align-items:flex-start;flex-direction:column;gap:.5rem}}
+.order-action-note{margin-top:1rem;padding:1rem 1.1rem;background:#fffcf0;border:1px solid #ead69a;border-radius:12px;color:var(--navy-700);line-height:1.6}

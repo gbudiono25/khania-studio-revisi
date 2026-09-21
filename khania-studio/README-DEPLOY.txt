@@ -71,3 +71,10 @@ KONFIGURASI:
 CATATAN:
 - Mesin voucher sudah disiapkan melalui data/vouchers.json.
 - Menu admin untuk membuat/mengelola voucher merupakan tahap berikutnya agar tidak mengganggu versi visual dan alur order yang sedang diuji.
+
+STAGE 1 UPDATE — PEMISAHAN ORDER DAN KONFIRMASI PEMBAYARAN
+1. Jalankan supabase-schema-migration-3.sql setelah migration 2 pada project Supabase.
+2. Upload file website dari ZIP ini dan pertahankan .env/config-pemesanan.php server yang sudah benar.
+3. Alur baru: pemesanan.html -> order + invoice email -> konfirmasi-pembayaran.html -> verifikasi admin.
+4. Order awal berstatus pending_payment / Menunggu Pembayaran. Payment confirmation mengubahnya menjadi payment_received / Menunggu Verifikasi Pembayaran.
+5. Bukti pembayaran tidak lagi dikirim pada formulir pemesanan awal.

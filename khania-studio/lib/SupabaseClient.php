@@ -124,7 +124,7 @@ class SupabaseClient
             if ($val === null) {
                 $params[$col . '=is'] = 'null';
             } else {
-                $params[$col . '[]'] = $val;
+                $params[$col . '=eq'] = $val;
             }
         }
 
@@ -187,7 +187,7 @@ class SupabaseClient
             if ($val === null) {
                 $params[$col . '=is'] = 'null';
             } else {
-                $params[$col . '[]'] = $val;
+                $params[$col . '=eq'] = $val;
             }
         }
 
@@ -435,6 +435,39 @@ class SupabaseClient
         }
 
         return $decoded;
+    }
+
+    /**
+     * Find an order for payment confirmation by order number + customer email.
+     * The RPC keeps public order data hidden while allowing the payment form to
+     * identify the correct order without requiring a Supabase Auth session.
+     */
+    public function findOrderForPayment(string $orderNumber, string $email): ?array
+    {
+        $result = $this->rpcPost('get_order_for_payment', [
+            'p_order_number' => $orderNumber,
+            'p_email'        => $email,
+        ]);
+        if (!empty($result) && is_array($result[0] ?? null)) {
+            return $result[0];
+        }
+        return null;
+    }
+
+    /**
+     * Atomically record a payment confirmation and move the order to
+     * payment_received. Returns a small status object from Supabase RPC.
+     */
+    public function submitPaymentConfirmation(string $orderNumber, string $email, string $paymentDate, int $amount, string $proofPath): array
+    {
+        $result = $this->rpcPost('submit_payment_confirmation', [
+            'p_order_number' => $orderNumber,
+            'p_email'        => $email,
+            'p_payment_date' => $paymentDate,
+            'p_amount'       => $amount,
+            'p_proof_path'   => $proofPath,
+        ]);
+        return is_array($result[0] ?? null) ? $result[0] : [];
     }
 
     /**
