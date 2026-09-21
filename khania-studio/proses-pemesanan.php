@@ -102,28 +102,44 @@ $record = [
 
 $supabaseSaved = false;
 $supabaseError = null;
+
 if ($supabase->isConfigured()) {
-    $pkgRecord = $supabase->findPackage($packages[$package]['code']);
-    $packageId = $pkgRecord['id'] ?? null;
-    $clientId = $supabase->findOrCreateClient([
-        'full_name'=>$name,'business_name'=>$business,'whatsapp'=>$wa,'email'=>$email,'domain'=>$domain ?: null,
+    $packageCode = $packages[$package]['code'];
+    $rpcResult = $supabase->createPublicOrder([
+        'full_name'     => $name,
+        'business_name' => $business,
+        'whatsapp'      => $wa,
+        'email'         => $email,
+        'domain'        => $domain ?: null,
+        'package_code'  => $packageCode,
+        'voucher_code'  => $voucherUsed ?: null,
     ]);
-    if ($clientId && $packageId) {
-        $orderPayload = [
-            'order_number'=>$orderId,'client_id'=>$clientId,'package_id'=>$packageId,
-            'order_date'=>$orderDate,'due_date'=>$dueDate,'base_price'=>$base,'setup_fee'=>$setup,
-            'voucher_code'=>$voucherUsed ?: null,'voucher_discount'=>$voucherDiscount,'total_amount'=>$total,
-            'status'=>'pending_payment','notes'=>'Order via website (pemesanan.html)'
-        ];
-        $orderRecord = $supabase->insert('orders', $orderPayload);
-        if ($orderRecord && isset($orderRecord['id'])) $supabaseSaved = true;
-        else $supabaseError = 'Gagal menyimpan order ke Supabase.';
+
+    if ($rpcResult && !empty($rpcResult['success']) && !empty($rpcResult['order_number'])) {
+        // Use authoritative values returned by Supabase for the invoice/email.
+        $orderId = (string)$rpcResult['order_number'];
+        $base = (int)($rpcResult['base_price'] ?? $base);
+        $setup = (int)($rpcResult['setup_fee'] ?? $setup);
+        $voucherUsed = (string)($rpcResult['voucher_code'] ?? '');
+        $voucherDiscount = (int)($rpcResult['voucher_discount'] ?? 0);
+        $total = (int)($rpcResult['total_amount'] ?? 0);
+        $dueDate = (string)($rpcResult['due_date'] ?? $dueDate);
+        $due = new \DateTime($dueDate);
+        $due->setTimezone(new \DateTimeZone('Asia/Jakarta'));
+        $supabaseSaved = true;
     } else {
-        $supabaseError = 'Gagal menemukan paket atau membuat data klien di Supabase.';
+        $supabaseError = 'Supabase tidak berhasil membuat order melalui RPC.';
+        error_log('Khania Studio Order RPC failed: ' . json_encode($rpcResult, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 }
 
 if (!$supabaseSaved) {
+    if ($supabase->isConfigured()) {
+        // Production mode: do not silently fall back to JSON when Supabase is configured.
+        fail('Pesanan belum dapat disimpan ke sistem. Silakan coba lagi beberapa saat kemudian. Jika masalah tetap terjadi, hubungi Khania Studio.', 500);
+    }
+
+    // Development/offline fallback only when Supabase is not configured.
     $dataFile = __DIR__ . '/data/orders.json';
     $orders = is_file($dataFile) ? json_decode((string)file_get_contents($dataFile), true) : [];
     if (!is_array($orders)) $orders = [];
@@ -131,7 +147,6 @@ if (!$supabaseSaved) {
     if (@file_put_contents($dataFile, json_encode($orders, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE), LOCK_EX) === false) {
         fail('Pesanan tidak dapat disimpan. Silakan coba lagi atau hubungi Khania Studio.', 500);
     }
-    if ($supabaseError) error_log('Khania Studio Order: '.$supabaseError);
 }
 
 $confirmUrl = orderBaseUrl() . '/konfirmasi-pembayaran.html?ref=' . rawurlencode($orderId);

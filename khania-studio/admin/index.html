@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Area — Khania Studio</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">KHANIA STUDIO</div>
+  <div class="role">ADMIN AREA</div>
+  <nav>
+    <a class="active" href="index.html">Dashboard</a>
+    <a href="#pesanan">Pesanan</a>
+    <a class="disabled" href="#">Form Brief <span>Segera</span></a>
+    <a class="disabled" href="#">Komunikasi Klien <span>Segera</span></a>
+    <a class="disabled" href="#">Pengumuman <span>Segera</span></a>
+    <a class="disabled" href="#">Klien <span>Segera</span></a>
+  </nav>
+  <button id="logoutBtn" class="logout">Keluar</button>
+</aside>
+<main class="main">
+<header class="topbar"><div><div class="eyebrow">ADMIN AREA</div><h1>Dashboard</h1></div><div id="adminName" class="admin-name"></div></header>
+<section class="cards" id="summaryCards"></section>
+<section class="panel" id="pesanan">
+  <div class="panel-head"><div><h2>Pesanan Website</h2><p>Ringkasan seluruh order yang dikelola Khania Studio.</p></div><button id="refreshBtn" class="btn secondary">Refresh</button></div>
+  <div class="filters"><button data-filter="all" class="filter active">Semua</button><button data-filter="pending_payment" class="filter">Menunggu Pembayaran</button><button data-filter="payment_received" class="filter">Verifikasi Pembayaran</button><button data-filter="payment_verified" class="filter">Pembayaran Terverifikasi</button><button data-filter="brief_sent" class="filter">Form Brief Dikirim</button><button data-filter="brief_received" class="filter">Brief Diterima</button><button data-filter="in_progress" class="filter">Dalam Pengerjaan</button><button data-filter="revision" class="filter">Revisi</button><button data-filter="completed" class="filter">Selesai</button></div>
+  <div class="table-wrap"><table><thead><tr><th>Order</th><th>Kode Project</th><th>Klien</th><th>Paket</th><th>Total</th><th>Status</th><th>Tanggal</th></tr></thead><tbody id="ordersBody"><tr><td colspan="7">Memuat data...</td></tr></tbody></table></div>
+</section>
+</main></div>
+<script src="admin.js"></script>
+</body></html>

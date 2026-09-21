@@ -438,6 +438,29 @@ class SupabaseClient
     }
 
     /**
+     * Create a website order through the controlled public Supabase RPC.
+     * Prices and totals are calculated server-side from the packages/vouchers tables.
+     */
+    public function createPublicOrder(array $data): ?array
+    {
+        $result = $this->rpcPost('create_public_order', [
+            'p_full_name'     => $data['full_name'] ?? '',
+            'p_business_name' => $data['business_name'] ?? '',
+            'p_whatsapp'      => $data['whatsapp'] ?? '',
+            'p_email'         => $data['email'] ?? '',
+            'p_domain'        => $data['domain'] ?? null,
+            'p_package_code'  => $data['package_code'] ?? '',
+            'p_voucher_code'  => $data['voucher_code'] ?? null,
+        ]);
+
+        if (!empty($result) && is_array($result[0] ?? null)) {
+            return $result[0];
+        }
+
+        return null;
+    }
+
+    /**
      * Find an order for payment confirmation by order number + customer email.
      * The RPC keeps public order data hidden while allowing the payment form to
      * identify the correct order without requiring a Supabase Auth session.

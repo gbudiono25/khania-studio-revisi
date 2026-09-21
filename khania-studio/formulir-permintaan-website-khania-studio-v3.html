@@ -116,29 +116,30 @@ details.info-detail .detail-content { margin-top: 10px; padding-top: 10px; borde
     <span class="badge">KHANIA STUDIO</span>
     <h1>Client Website Brief Form V3</h1>
     <p>Formulir ringkas dan terstruktur. Isi data yang Anda ketahui, Khania Studio akan membantu menyusun konsep, struktur, copywriting, dan arah desain website Anda.</p>
-    <div class="note"><b>Penting:</b> Pertanyaan tambahan akan muncul otomatis sesuai paket dan jenis website yang Anda pilih. Anda selalu dapat memilih <i>"Belum tahu — mohon dibantu Khania Studio"</i>.</div>
+    <div class="note"><b>Penting:</b> Data order dan data pemesan diambil otomatis dari pesanan yang pembayarannya telah terverifikasi. Pertanyaan tambahan akan muncul sesuai paket dan jenis website.</div>
   </header>
 
   <form id="briefForm" action="proses-formulir.php" method="POST" enctype="multipart/form-data">
     <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0">
 
-    <!-- A. DATA PEMESAN & PAKET -->
+    <!-- A. DATA ORDER & PEMESAN -->
     <section class="card">
-      <h2>A. Paket & Data Pemesan</h2>
-      <p class="desc">Informasi dasar pemesan dan pilihan paket website Khania Studio.</p>
+      <h2>A. Data Order & Pemesan</h2>
+      <p class="desc">Data berikut diambil otomatis dari pesanan yang pembayarannya telah dikonfirmasi. Data order dan paket tidak perlu diketik ulang.</p>
+      <input type="hidden" name="order_id" id="orderId">
+      <input type="hidden" name="package" id="pkg" value="">
       <div class="grid">
-        <div class="field">
-          <label>Paket Website <span class="req">*</span></label>
-          <select id="pkg" name="package" required>
-            <option value="">-- Pilih Paket --</option>
-            <option value="Starter">Starter — Maks. 3 Halaman</option>
-            <option value="Bronze">Bronze — Maks. 6 Halaman</option>
-            <option value="Silver">Silver — Maks. 10 Halaman</option>
-            <option value="Gold">Gold — Maks. 15 Halaman</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Jenis Website <span class="req">*</span></label>
+        <div class="field"><label>Kode Klien/Project</label><input id="clientCode" readonly></div>
+        <div class="field"><label>Nomor Order</label><input id="orderNumber" readonly></div>
+        <div class="field"><label>Paket Website</label><input id="packageDisplay" readonly></div>
+        <div class="field"><label>Status Pembayaran</label><input id="paymentStatus" readonly value="Pembayaran Terverifikasi"></div>
+        <div class="field"><label>Nama Pemesan / PIC</label><input name="pic" id="pic" readonly required></div>
+        <div class="field"><label>Email PIC</label><input type="email" name="picEmail" id="picEmail" readonly required></div>
+        <div class="field"><label>WhatsApp PIC</label><input name="picWhatsapp" id="picWhatsapp" readonly required></div>
+        <div class="field"><label>Nama Bisnis / Brand</label><input name="businessName" id="businessName" readonly required></div>
+        <div class="field"><label>Jabatan / Peran <span class="req">*</span></label><input name="picRole" required placeholder="Contoh: Pemilik Bisnis / Marketing"></div>
+        <div class="field"><label>Kota Domisili (Opsional)</label><input name="picCity" placeholder="Contoh: Bekasi, Jakarta Selatan"></div>
+        <div class="field full"><label>Jenis Website <span class="req">*</span></label>
           <select id="type" name="siteType" required>
             <option value="">-- Pilih Jenis Website --</option>
             <option value="Landing Page / Promo">Landing Page / Promo</option>
@@ -156,23 +157,12 @@ details.info-detail .detail-content { margin-top: 10px; padding-top: 10px; borde
           </select>
         </div>
       </div>
-
       <div class="kpis">
         <div class="kpi"><b id="kpiPages">—</b><span>Batas Halaman</span></div>
         <div class="kpi"><b id="kpiItems">—</b><span>Item Produk/Jasa Lengkap</span></div>
         <div class="kpi"><b id="kpiSeo">—</b><span>Artikel SEO</span></div>
       </div>
-      <p class="hint">"Item Lengkap" = item yang ditampilkan dengan Foto + Deskripsi. Anda tetap dapat mencatat lebih banyak produk/jasa.</p>
-
-      <hr style="border:0;border-top:1px dashed var(--line);margin:16px 0">
-
-      <div class="grid">
-        <div class="field"><label>Nama Pemesan / PIC <span class="req">*</span></label><input name="pic" required placeholder="Nama lengkap Anda"></div>
-        <div class="field"><label>Jabatan / Peran <span class="req">*</span></label><input name="picRole" required placeholder="Contoh: Pemilik Bisnis / Marketing"></div>
-        <div class="field"><label>Email PIC <span class="req">*</span></label><input type="email" name="picEmail" required placeholder="nama@email.com"></div>
-        <div class="field"><label>WhatsApp PIC <span class="req">*</span></label><input name="picWhatsapp" required placeholder="08xxxxxxxxxx"></div>
-        <div class="field full"><label>Kota Domisili (Opsional)</label><input name="picCity" placeholder="Contoh: Bekasi, Jakarta Selatan"></div>
-      </div>
+      <p class="hint">Data order, paket, nama, email, WhatsApp, dan bisnis bersumber dari pesanan. Paket tidak dapat diubah dari formulir ini.</p>
     </section>
 
     <!-- B. INFORMASI BISNIS -->
@@ -180,7 +170,6 @@ details.info-detail .detail-content { margin-top: 10px; padding-top: 10px; borde
       <h2>B. Informasi Bisnis</h2>
       <p class="desc">Fakta dan gambaran usaha Anda yang ingin ditampilkan pada website.</p>
       <div class="grid">
-        <div class="field"><label>Nama Bisnis / Brand <span class="req">*</span></label><input name="businessName" required placeholder="Contoh: RapiClean Laundry"></div>
         <div class="field"><label>Bidang Usaha <span class="req">*</span></label><input name="businessCategory" required placeholder="Contoh: Jasa Laundry Kiloan & Satuan"></div>
         <div class="field full"><label>Deskripsi Bisnis <span class="req">*</span></label><textarea name="businessDescription" required placeholder="Apa yang bisnis Anda lakukan, produk/jasa utama, dan nilai penting yang perlu diketahui calon pelanggan?"></textarea></div>
         <div class="field full"><label>Target Pelanggan Utama <span class="req">*</span></label><textarea name="targetAudience" required placeholder="Contoh: Warga perumahan, mahasiswa, karyawan di sekitar Jatiasih Bekasi."></textarea></div>
@@ -634,11 +623,31 @@ details.info-detail .detail-content { margin-top: 10px; padding-top: 10px; borde
       </label>
     </section>
 
+    <!-- R. PERMINTAAN TAMBAHAN / KEBUTUHAN KHUSUS -->
+    <section class="card">
+      <h2>R. Permintaan Tambahan / Kebutuhan Khusus</h2>
+      <p class="desc">Catat kebutuhan yang belum terwakili pada bagian sebelumnya. Khania Studio akan meninjau setiap permintaan berdasarkan paket dan scope pekerjaan.</p>
+      <div class="options-grid">
+        <label class="opt-card"><input type="checkbox" name="additionalRequests[]" value="Halaman tambahan"> Halaman tambahan</label>
+        <label class="opt-card"><input type="checkbox" name="additionalRequests[]" value="Fitur tambahan"> Fitur tambahan</label>
+        <label class="opt-card"><input type="checkbox" name="additionalRequests[]" value="Upgrade domain"> Upgrade domain</label>
+        <label class="opt-card"><input type="checkbox" name="additionalRequests[]" value="Edit halaman eksisting"> Edit halaman eksisting</label>
+        <label class="opt-card"><input type="checkbox" name="additionalRequests[]" value="Edit gambar basic"> Edit gambar basic</label>
+        <label class="opt-card"><input type="checkbox" name="additionalRequests[]" value="Integrasi / fitur khusus"> Integrasi / fitur khusus</label>
+        <label class="opt-card"><input type="checkbox" name="additionalRequests[]" value="Lainnya"> Lainnya</label>
+      </div>
+      <div class="field full">
+        <label>Detail Permintaan Tambahan / Kebutuhan Khusus</label>
+        <textarea name="additionalRequestDetails" placeholder="Jelaskan kebutuhan Anda secara singkat dan jelas."></textarea>
+      </div>
+      <div class="alert-note"><b>Catatan:</b> Permintaan tambahan akan ditinjau oleh Khania Studio. Jika terdapat kebutuhan di luar cakupan paket, Khania Studio akan menginformasikan biaya tambahan terlebih dahulu sebelum pekerjaan dilakukan.</div>
+    </section>
+
     <!-- Q. REVIEW & APPROVAL -->
     <section class="card">
       <h2>Q. Periksa & Konfirmasi Kirim</h2>
       <div class="alert-note">
-        <b>STATUS PROSES:</b> Setelah dikirim, status formulir adalah <i>"DATA DITERIMA — MENUNGGU PEMERIKSAAN KHANIA STUDIO"</i>. Status <b>READY FOR PRODUCTION</b> akan ditetapkan setelah Khania Studio mengonfirmasi kelengkapan materi dan scope.
+        <b>STATUS PROSES:</b> Setelah dikirim, status brief adalah <b>SUBMITTED</b> — menunggu pemeriksaan Khania Studio. Status berikutnya dapat berubah menjadi <b>UNDER_REVIEW</b>, <b>NEED_CLIENT_INFO</b>, <b>SCOPE_CONFIRMED</b>, atau <b>READY_FOR_PRODUCTION</b> sesuai hasil pemeriksaan.
       </div>
 
       <label class="check-label"><input type="checkbox" required> <span>Saya menyatakan seluruh informasi yang diisikan adalah benar dan berwenang memberikan materi ini. <span class="req">*</span></span></label>
@@ -910,6 +919,26 @@ document.getElementById('btnCloseModal2').onclick = () => document.getElementByI
 pkgSelect.onchange = updatePkgRules;
 typeSelect.onchange = toggleIndustrySections;
 document.getElementById('btnAddProduct').onclick = addProductItem;
+
+// Order context is passed in the secure workflow link as display context. Server tetap memverifikasi order, client, package, dan status pembayaran.
+const params = new URLSearchParams(window.location.search);
+const orderIdParam = params.get('order_id') || params.get('order');
+if (orderIdParam) {
+  document.getElementById('orderId').value = orderIdParam;
+}
+const contextMap = {
+  client_code: 'clientCode', order_number: 'orderNumber', package: 'packageDisplay',
+  pic: 'pic', email: 'picEmail', whatsapp: 'picWhatsapp', business_name: 'businessName'
+};
+Object.keys(contextMap).forEach(key => {
+  const value = params.get(key);
+  if (value) document.getElementById(contextMap[key]).value = value;
+});
+const packageParam = params.get('package');
+if (packageParam) {
+  const packageNames = {Starter:'Starter', Bronze:'Bronze', Silver:'Silver', Gold:'Gold'};
+  document.getElementById('pkg').value = packageNames[packageParam] ? packageParam : '';
+}
 
 // Initial Setup
 addProductItem();

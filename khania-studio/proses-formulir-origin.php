@@ -455,79 +455,31 @@ function postArray($key) {
     return array_filter(array_map('trim', $vals));
 }
 
-$orderId            = post('order_id');
-$siteType           = post('siteType');
-$picRole            = post('picRole');
-$picCity            = post('picCity');
-$approvalName       = post('approvalName');
-$businessCategory = post('businessCategory');
+$package             = post('package');
+$siteType            = post('siteType');
+$pic                 = post('pic');
+$picRole             = post('picRole');
+$picEmail            = post('picEmail');
+$picWhatsapp         = post('picWhatsapp');
+$picCity             = post('picCity');
+$businessName        = post('businessName');
+$businessCategory    = post('businessCategory');
 $businessDescription = post('businessDescription');
-$targetAudience = post('targetAudience');
-
-if ($orderId === '') {
-    fail('Link Client Brief tidak memiliki Nomor Order. Silakan gunakan link yang dikirim Khania Studio.');
-}
-
-if (!$supabase->isConfigured()) {
-    fail('Sistem database Khania Studio belum siap memproses Client Brief. Silakan hubungi Khania Studio.');
-}
-
-/* IMPORTANT: order, client, package and payment status are authoritative on the server. */
-$orderRows = $supabase->select(
-    'orders',
-    'id,order_number,client_id,package_id,status,order_date',
-    'order_number=eq.' . rawurlencode($orderId)
-);
-$orderRecord = is_array($orderRows) && isset($orderRows[0]) ? $orderRows[0] : null;
-if (!$orderRecord || empty($orderRecord['id'])) {
-    fail('Nomor Order tidak ditemukan. Pastikan Anda menggunakan link Client Brief dari Khania Studio.');
-}
-
-$paymentStatus = strtolower(trim((string)($orderRecord['status'] ?? '')));
-$verifiedStatuses = ['payment_verified','paid','verified','confirmed','completed_payment','pembayaran_terverifikasi'];
-if (!in_array($paymentStatus, $verifiedStatuses, true)) {
-    fail('Client Brief baru dapat diisi setelah pembayaran pada order ini terverifikasi oleh Khania Studio.');
-}
-
-$clientRows = $supabase->select(
-    'clients',
-    'id,client_code,full_name,business_name,whatsapp,email,domain',
-    'id=eq.' . rawurlencode((string)$orderRecord['client_id'])
-);
-$clientRecord = is_array($clientRows) && isset($clientRows[0]) ? $clientRows[0] : null;
-if (!$clientRecord) {
-    fail('Data klien untuk order ini tidak ditemukan.');
-}
-
-$packageRows = $supabase->select(
-    'packages',
-    'id,code,name,base_price,setup_fee',
-    'id=eq.' . rawurlencode((string)$orderRecord['package_id'])
-);
-$packageRecord = is_array($packageRows) && isset($packageRows[0]) ? $packageRows[0] : null;
-if (!$packageRecord) {
-    fail('Data paket untuk order ini tidak ditemukan.');
-}
-
-$packageCodeMap = ['starter'=>'Starter','bronze'=>'Bronze','silver'=>'Silver','gold'=>'Gold'];
-$package = $packageCodeMap[strtolower((string)($packageRecord['code'] ?? ''))] ?? (string)($packageRecord['name'] ?? '');
-$pic = trim((string)($clientRecord['full_name'] ?? ''));
-$picEmail = trim((string)($clientRecord['email'] ?? ''));
-$picWhatsapp = trim((string)($clientRecord['whatsapp'] ?? ''));
-$businessName = trim((string)($clientRecord['business_name'] ?? ''));
+$targetAudience      = post('targetAudience');
+$approvalName        = post('approvalName');
 
 $required = [
-    'Nomor Order' => $orderId,
+    'Paket Website' => $package,
     'Jenis Website' => $siteType,
-    'Nama PIC dari Order' => $pic,
-    'Email PIC dari Order' => $picEmail,
-    'WhatsApp PIC dari Order' => $picWhatsapp,
-    'Nama Bisnis dari Order' => $businessName,
+    'Nama PIC' => $pic,
     'Peran PIC' => $picRole,
-    'Nama Persetujuan' => $approvalName,
+    'Email PIC' => $picEmail,
+    'WhatsApp PIC' => $picWhatsapp,
+    'Nama Bisnis' => $businessName,
     'Bidang Usaha' => $businessCategory,
     'Deskripsi Bisnis' => $businessDescription,
     'Target Pelanggan' => $targetAudience,
+    'Nama Persetujuan' => $approvalName,
 ];
 
 $missing = [];
@@ -646,18 +598,15 @@ if ($pn) {
     }
 }
 
-/* Save brief submission to the EXISTING verified order. Never create a new order here. */
-$briefSaved = false;
+/* Unique Submission ID */
 $randomCode = strtoupper(substr(md5(uniqid((string)microtime(true), true)), 0, 4));
-$submissionId = $orderId . '-BRIEF-' . $randomCode;
-$subject = 'Client Brief V3 — ' . $businessName . ' — ' . $package . ' — ' . $orderId;
+$submissionId = date('Ymd-His') . '-' . $randomCode;
+$subject = 'Client Brief V3 — ' . $businessName . ' — ' . $package . ' — ' . $submissionId;
 
+/* Structured Sections Map */
 $sections = [
-    'A. DATA ORDER & PEMESAN' => [
-        'Kode Klien/Project' => (string)($clientRecord['client_code'] ?? ''),
-        'Nomor Order' => $orderId,
+    'A. DATA PEMESAN & PAKET' => [
         'Paket Website' => $package,
-        'Status Pembayaran' => 'Pembayaran Terverifikasi',
         'Jenis Website' => $siteType,
         'Nama Pemesan / PIC' => $pic,
         'Jabatan / Peran' => $picRole,
@@ -729,26 +678,31 @@ $sections = [
         'Laundry - Waktu Proses' => post('laundryTurnaround'),
         'Laundry - Fasilitas' => post('laundryFacilities'),
         'Laundry - Daftar Harga' => post('laundryPricing'),
+
         'Company Profile - Sejarah' => post('companyHistory'),
         'Company Profile - Visi' => post('vision'),
         'Company Profile - Misi' => post('mission'),
         'Company Profile - Core Values' => post('coreValues'),
         'Company Profile - Manajemen' => post('management'),
         'Company Profile - Unit Bisnis' => post('businessUnits'),
+
         'Restoran - Menu Utama' => post('restaurantMenu'),
         'Restoran - Rentang Harga' => post('restaurantPrice'),
         'Restoran - Reservasi' => post('restaurantBooking'),
         'Restoran - Order Online' => post('restaurantDelivery'),
+
         'Hotel - Tipe Kamar & Tarif' => post('hotelRooms'),
         'Hotel - Fasilitas' => post('hotelFacilities'),
         'Hotel - Check-in/out' => post('hotelCheckInOut'),
         'Hotel - Reservasi' => post('hotelBooking'),
+
         'Properti - Nama Proyek' => post('propertyProject'),
         'Properti - Lokasi' => post('propertyLocation'),
         'Properti - Luas & Unit' => post('propertyArea'),
         'Properti - Legalitas' => post('propertyLegal'),
         'Properti - Tipe Rumah' => post('propertyTypes'),
         'Properti - Fasilitas' => post('propertyFacilities'),
+
         'Travel - Paket & Destinasi' => post('travelPackages'),
         'Travel - Izin PPIU' => post('travelLicenses'),
         'Travel - Fasilitas' => post('travelFacilities'),
@@ -780,69 +734,148 @@ $sections = [
         'Pernyataan Hak Aset' => post('assetConsent') === 'on' ? 'Ya (Disetujui)' : 'Ya',
         'Nama Persetujuan' => $approvalName,
     ],
-    'R. PERMINTAAN TAMBAHAN / KEBUTUHAN KHUSUS' => [
-        'Jenis Permintaan Tambahan' => implode(', ', postArray('additionalRequests')),
-        'Detail Permintaan Tambahan' => post('additionalRequestDetails'),
-    ],
 ];
 
-$briefData = [
-    'order_id' => $orderId,
-    'client_code' => (string)($clientRecord['client_code'] ?? ''),
-    'package' => $package,
-    'site_type' => $siteType,
-    'pic' => $pic,
-    'pic_role' => $picRole,
-    'pic_email' => $picEmail,
-    'pic_whatsapp' => $picWhatsapp,
-    'pic_city' => $picCity,
-    'business_name' => $businessName,
-    'business_category' => $businessCategory,
-    'business_description' => $businessDescription,
-    'target_audience' => $targetAudience,
-    'approval_name' => $approvalName,
-    'additional_requests' => postArray('additionalRequests'),
-    'additional_request_details' => post('additionalRequestDetails'),
-    'products' => $products,
-    'sections' => $sections,
-    'submitted_via' => 'Client Website Brief V3 Integrated',
-];
+/* Save brief submission to Supabase (if configured) */
+$briefSaved = false;
+if ($supabase->isConfigured()) {
+    $packageMap = ['Starter'=>'starter','Bronze'=>'bronze','Silver'=>'silver','Gold'=>'gold'];
+    $pkgCode = $packageMap[$package] ?? strtolower($package);
+    $pkgRecord = $supabase->findPackage($pkgCode);
 
-$briefRecord = $supabase->insert('website_briefs', [
-    'order_id' => $orderRecord['id'],
-    'client_id' => $orderRecord['client_id'],
-    'client_code' => (string)($clientRecord['client_code'] ?? ''),
-    'version' => 1,
-    'brief_data' => $briefData,
-    'submitted_at' => date('c'),
-    'status' => 'SUBMITTED',
-]);
+    $clientId = $supabase->findOrCreateClient([
+        'full_name'     => $pic,
+        'business_name' => $businessName,
+        'whatsapp'      => $picWhatsapp,
+        'email'         => $picEmail,
+        'domain'        => post('existingDomain') ?: post('desiredDomain'),
+    ]);
 
-if (!$briefRecord || empty($briefRecord['id'])) {
-    error_log('Khania Studio Brief: Failed to save website_briefs for order ' . $orderId);
-    fail('Data Client Brief tidak berhasil disimpan ke database. Pesanan tidak diubah. Silakan coba lagi.');
-}
+    $orderPayload = [
+        'order_number'  => $submissionId,
+        'client_id'     => $clientId,
+        'package_id'    => $pkgRecord['id'] ?? null,
+        'order_date'    => date('Y-m-d'),
+        'due_date'      => (new DateTime('+2 days', new DateTimeZone('Asia/Jakarta')))->format('Y-m-d H:i:s'),
+        'base_price'    => $pkgRecord['base_price'] ?? 0,
+        'setup_fee'     => $pkgRecord['setup_fee'] ?? 0,
+        'total_amount'  => $pkgRecord ? ($pkgRecord['base_price'] + $pkgRecord['setup_fee']) : 0,
+        'status'        => 'pending_payment',
+        'notes'         => 'Brief V3 submission via formulir-permintaan-website-khania-studio-v3.html',
+    ];
+    $orderRecord = $supabase->insert('orders', $orderPayload);
 
-// Upload attachments to Supabase Storage, grouped by Order ID.
-if ($attachments) {
-    $storageBucket = $supabase->getClientFilesBucket() ?: 'client-files';
-    foreach ($attachments as $idx => $a) {
-        $fileContent = file_get_contents($a['path']);
-        if ($fileContent !== false) {
-            $storagePath = $orderId . '/brief-v3/file_' . $idx . '_' . basename($a['name']);
-            $supabase->uploadFile($storageBucket, $storagePath, $fileContent, $a['type']);
+    if ($orderRecord && isset($orderRecord['id'])) {
+        $briefData = [
+            'package'               => $package,
+            'site_type'             => $siteType,
+            'pic'                   => $pic,
+            'pic_role'              => $picRole,
+            'pic_email'             => $picEmail,
+            'pic_whatsapp'          => $picWhatsapp,
+            'pic_city'              => $picCity,
+            'business_name'         => $businessName,
+            'business_category'     => $businessCategory,
+            'business_description'  => $businessDescription,
+            'target_audience'       => $targetAudience,
+            'approval_name'         => $approvalName,
+            'legal_name'            => post('legalName'),
+            'founded_year'          => post('foundedYear'),
+            'service_area'          => post('serviceArea'),
+            'business_hours'        => post('businessHours'),
+            'business_address'      => post('businessAddress'),
+            'primary_goal'          => post('primaryGoal'),
+            'secondary_goals'       => postArray('secondaryGoals'),
+            'structure_choice'      => post('structureChoice'),
+            'proposed_structure'    => post('proposedStructure'),
+            'features'              => postArray('features'),
+            'has_domain'            => post('hasDomain'),
+            'existing_domain'       => post('existingDomain'),
+            'desired_domain'        => post('desiredDomain'),
+            'has_existing_site'     => post('hasExistingSite'),
+            'old_site_url'          => post('oldSiteUrl'),
+            'keep_old'              => post('keepOld'),
+            'change_old'            => post('changeOld'),
+            'job_type'              => post('jobType'),
+            'featured_product'      => $featuredProduct,
+            'products'              => $products,
+            'color_choice'          => post('colorChoice'),
+            'brand_colors'          => post('brandColors'),
+            'avoid_colors'          => post('avoidColors'),
+            'font_choice'          => post('fontChoice'),
+            'font_style'           => post('fontStyle'),
+            'visual_style'          => postArray('visualStyle'),
+            'reference_status'      => post('referenceStatus'),
+            'reference_url'         => post('referenceUrl'),
+            'liked_parts'           => postArray('likedParts'),
+            'headline'              => post('headline'),
+            'subheadline'           => post('subheadline'),
+            'primary_cta'           => post('primaryCTA'),
+            'industry_data'         => [
+                'laundry'    => post('laundryServiceTypes'),
+                'restaurant' => post('restaurantMenu'),
+                'hotel'      => post('hotelRooms'),
+                'property'   => post('propertyProject'),
+                'travel'     => post('travelPackages'),
+            ],
+            'credentials'           => post('credentials'),
+            'testimonials'          => post('testimonials'),
+            'contact_info'          => [
+                'whatsapp_business' => post('bizWa'),
+                'wa_pic'            => post('bizWaPic'),
+                'phone'             => post('phone'),
+                'email_business'    => post('bizEmail'),
+                'instagram'         => post('instagram'),
+                'facebook'          => post('facebook'),
+                'tiktok'            => post('tiktok'),
+                'google_maps'       => post('maps'),
+                'public_address'    => post('publicAddress'),
+                'primary_contact'   => post('primaryContact'),
+            ],
+            'seo'                   => [
+                'keywords'      => post('keywords'),
+                'seo_location'  => post('seoLocation'),
+                'competitors'   => post('competitors'),
+                'seo_topics'    => post('seoTopics'),
+                'seo_assist'    => post('seoAssist'),
+            ],
+            'asset_consent'         => post('assetConsent') === 'on' ? 'on' : '',
+        ];
+
+        $briefRecord = $supabase->insert('website_briefs', [
+            'order_id'    => $orderRecord['id'],
+            'client_id'   => $clientId,
+            'data'        => $briefData,
+            'submitted_at' => date('c'),
+            'status'      => 'submitted',
+        ]);
+
+        // Upload attachments to Supabase Storage
+        if ($attachments) {
+            $storageBucket = $supabase->getClientFilesBucket() ?: 'client-files';
+            foreach ($attachments as $idx => $a) {
+                $fileContent = file_get_contents($a['path']);
+                if ($fileContent !== false) {
+                    $storagePath = $submissionId . '/file_' . $idx . '_' . basename($a['name']);
+                    $supabase->uploadFile($storageBucket, $storagePath, $fileContent, $a['type']);
+                }
+            }
         }
-    }
-}
 
-$briefSaved = true;
-error_log('Khania Studio Brief: Saved integrated submission ' . $submissionId . ' for order ' . $orderId . '.');
+        $briefSaved = true;
+        error_log('Khania Studio Brief: Saved submission ' . $submissionId . ' to Supabase.');
+    } else {
+        error_log('Khania Studio Brief: Failed to create order record in Supabase.');
+    }
+} else {
+    error_log('Khania Studio Brief: Supabase not configured, skipping database save.');
+}
 
 /* Build Plain Text Body */
 $bodyText = "KHANIA STUDIO — CLIENT WEBSITE BRIEF V3\r\n";
 $bodyText .= "ID SUBMISSION: " . $submissionId . "\r\n";
 $bodyText .= "WAKTU: " . date('d-m-Y H:i:s') . " WIB\r\n";
-$bodyText .= "STATUS: SUBMITTED — MENUNGGU PEMERIKSAAN KHANIA STUDIO\r\n";
+$bodyText .= "STATUS: DATA DITERIMA — MENUNGGU PEMERIKSAAN KHANIA STUDIO\r\n";
 $bodyText .= "========================================\r\n\r\n";
 
 foreach ($sections as $sectionTitle => $fields) {

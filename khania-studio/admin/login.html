@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Area — Khania Studio</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="login-body">
+<main class="login-card">
+  <div class="brand">KHANIA STUDIO</div>
+  <h1>Admin Area</h1>
+  <p>Masuk untuk mengelola pemesanan website dan pekerjaan klien.</p>
+  <form id="loginForm">
+    <label>Email Admin<input id="email" type="email" autocomplete="username" required></label>
+    <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+    <button type="submit" class="btn primary">Masuk</button>
+    <div id="loginStatus" class="status"></div>
+  </form>
+</main>
+<script>
+const form=document.getElementById('loginForm');
+const statusEl=document.getElementById('loginStatus');
+form.addEventListener('submit', async e=>{
+  e.preventDefault(); statusEl.textContent='Memeriksa akun...';
+  try{
+    const r=await fetch('../api/admin/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:password.value})});
+    const d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.message||'Login gagal');
+    location.href='index.html';
+  }catch(err){statusEl.textContent=err.message;}
+});
+</script>
+</body></html>
