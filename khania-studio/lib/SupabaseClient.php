@@ -400,14 +400,22 @@ class SupabaseClient
      * @param array  $params  Parameters to pass as JSON body
      * @return array Response decoded body
      */
-    public function rpcPost(string $fn, array $params = []): array
+    /**
+     * Call a PostgreSQL function (RPC) via PostgREST.
+     *
+     * This detailed variant preserves HTTP status and response body so
+     * production diagnostics can identify the actual PostgreSQL/PostgREST
+     * error instead of reducing it to an empty array.
+     *
+     * @return array{status:int, body:mixed, raw:string, curl_error:string}
+     */
+    public function rpcPostDetailed(string $fn, array $params = []): array
     {
         $url = $this->url . '/rest/v1/rpc/' . rawurlencode($fn);
 
         $apiKey = !empty($this->serviceRoleKey) ? $this->serviceRoleKey : $this->anonKey;
 
         $ch = curl_init($url);
-
         $payload = json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         curl_setopt_array($ch, [
@@ -426,24 +434,39 @@ class SupabaseClient
 
         $response = curl_exec($ch);
         $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
         curl_close($ch);
 
-        $decoded = json_decode($response, true);
+        $decoded = json_decode((string)$response, true);
 
-        if (!is_array($decoded)) {
-            return [];
-        }
+        return [
+            'status'     => (int)$httpStatus,
+            'body'       => $decoded ?? (string)$response,
+            'raw'        => (string)$response,
+            'curl_error' => (string)$curlError,
+        ];
+    }
 
-        return $decoded;
+    /**
+     * Backward-compatible RPC helper.
+     */
+    public function rpcPost(string $fn, array $params = []): array
+    {
+        $res = $this->rpcPostDetailed($fn, $params);
+        return is_array($res['body']) ? $res['body'] : [];
     }
 
     /**
      * Create a website order through the controlled public Supabase RPC.
      * Prices and totals are calculated server-side from the packages/vouchers tables.
      */
-    public function createPublicOrder(array $data): ?array
+    /**
+     * Detailed public-order RPC call used temporarily for production diagnosis.
+     * No credentials are returned; the caller receives only Supabase status/body.
+     */
+    public function createPublicOrderDetailed(array $data): array
     {
-        $result = $this->rpcPost('create_public_order', [
+        return $this->rpcPostDetailed('create_public_order', [
             'p_full_name'     => $data['full_name'] ?? '',
             'p_business_name' => $data['business_name'] ?? '',
             'p_whatsapp'      => $data['whatsapp'] ?? '',
@@ -452,6 +475,15 @@ class SupabaseClient
             'p_package_code'  => $data['package_code'] ?? '',
             'p_voucher_code'  => $data['voucher_code'] ?? null,
         ]);
+    }
+
+    /**
+     * Create a website order through the controlled public Supabase RPC.
+     */
+    public function createPublicOrder(array $data): ?array
+    {
+        $res = $this->createPublicOrderDetailed($data);
+        $result = is_array($res['body']) ? $res['body'] : [];
 
         if (!empty($result) && is_array($result[0] ?? null)) {
             return $result[0];

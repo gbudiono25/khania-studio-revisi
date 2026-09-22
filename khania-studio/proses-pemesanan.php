@@ -105,7 +105,7 @@ $supabaseError = null;
 
 if ($supabase->isConfigured()) {
     $packageCode = $packages[$package]['code'];
-    $rpcResult = $supabase->createPublicOrder([
+    $rpcResponse = $supabase->createPublicOrderDetailed([
         'full_name'     => $name,
         'business_name' => $business,
         'whatsapp'      => $wa,
@@ -114,6 +114,9 @@ if ($supabase->isConfigured()) {
         'package_code'  => $packageCode,
         'voucher_code'  => $voucherUsed ?: null,
     ]);
+
+    $rpcBody = is_array($rpcResponse['body'] ?? null) ? $rpcResponse['body'] : [];
+    $rpcResult = is_array($rpcBody[0] ?? null) ? $rpcBody[0] : null;
 
     if ($rpcResult && !empty($rpcResult['success']) && !empty($rpcResult['order_number'])) {
         // Use authoritative values returned by Supabase for the invoice/email.
@@ -129,14 +132,25 @@ if ($supabase->isConfigured()) {
         $supabaseSaved = true;
     } else {
         $supabaseError = 'Supabase tidak berhasil membuat order melalui RPC.';
-        error_log('Khania Studio Order RPC failed: ' . json_encode($rpcResult, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+        // TEMPORARY DIAGNOSTIC: log only HTTP status + sanitized response.
+        // Never log API keys, passwords, or the request payload.
+        $diagnostic = [
+            'http_status' => (int)($rpcResponse['status'] ?? 0),
+            'curl_error'  => (string)($rpcResponse['curl_error'] ?? ''),
+            'body'        => $rpcResponse['body'] ?? null,
+        ];
+        error_log(
+            'KHANIA_ORDER_RPC_DIAGNOSTIC: ' .
+            json_encode($diagnostic, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+        );
     }
 }
 
 if (!$supabaseSaved) {
     if ($supabase->isConfigured()) {
         // Production mode: do not silently fall back to JSON when Supabase is configured.
-        fail('Pesanan belum dapat disimpan ke sistem. Silakan coba lagi beberapa saat kemudian. Jika masalah tetap terjadi, hubungi Khania Studio.', 500);
+        fail('Pesanan belum dapat disimpan ke sistem. Silakan coba lagi beberapa saat kemudian. Jika masalah tetap terjadi, hubungi Khania Studio. (Diagnostic sementara: cek error log server untuk entri KHANIA_ORDER_RPC_DIAGNOSTIC.)', 500);
     }
 
     // Development/offline fallback only when Supabase is not configured.
