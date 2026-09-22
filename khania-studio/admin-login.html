@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login Admin — Khania Studio</title>
+<link rel="stylesheet" href="css/admin-stage2b1.css">
+</head>
+<body class="login-page">
+<main class="login-card">
+  <div class="brand-mark">KS</div>
+  <div class="eyebrow">KHANIA STUDIO / ADMIN</div>
+  <h1>Login Admin</h1>
+  <p class="lead">Masuk untuk mengelola pesanan dan proses Form Brief Website.</p>
+
+  <form id="loginForm">
+    <label>Email Admin
+      <input id="email" type="email" autocomplete="username" required>
+    </label>
+    <label>Password
+      <input id="password" type="password" autocomplete="current-password" required>
+    </label>
+    <button class="btn primary full" type="submit">Masuk ke Admin Area</button>
+  </form>
+  <div id="loginMsg" class="message hidden"></div>
+  <p class="security-note">Akses dibatasi untuk akun Supabase yang memiliki role <strong>admin</strong>.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/admin-auth.js"></script>
+</body>
+</html>
