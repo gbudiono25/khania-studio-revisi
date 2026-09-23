@@ -127,6 +127,7 @@ details.info-detail .detail-content { margin-top: 10px; padding-top: 10px; borde
       <h2>A. Data Order & Pemesan</h2>
       <p class="desc">Data berikut diambil otomatis dari pesanan yang pembayarannya telah dikonfirmasi. Data order dan paket tidak perlu diketik ulang.</p>
       <input type="hidden" name="order_id" id="orderId">
+      <input type="hidden" name="brief_token" id="briefToken">
       <input type="hidden" name="package" id="pkg" value="">
       <div class="grid">
         <div class="field"><label>Kode Klien/Project</label><input id="clientCode" readonly></div>
@@ -920,24 +921,51 @@ pkgSelect.onchange = updatePkgRules;
 typeSelect.onchange = toggleIndustrySections;
 document.getElementById('btnAddProduct').onclick = addProductItem;
 
-// Order context is passed in the secure workflow link as display context. Server tetap memverifikasi order, client, package, dan status pembayaran.
+// Secure workflow context: the email contains only a one-time token.
 const params = new URLSearchParams(window.location.search);
-const orderIdParam = params.get('order_id') || params.get('order');
-if (orderIdParam) {
-  document.getElementById('orderId').value = orderIdParam;
+const briefToken = params.get('brief_token') || '';
+document.getElementById('briefToken').value = briefToken;
+
+function lockFormUntilContextReady(locked, message='') {
+  const formEl = document.getElementById('briefForm');
+  formEl.querySelectorAll('input,select,textarea,button').forEach(el => {
+    if (el.id === 'btnCloseModal' || el.id === 'btnCloseModal2') return;
+    el.disabled = locked;
+  });
+  if (message) {
+    const note = document.createElement('div');
+    note.className = 'alert-note';
+    note.style.marginTop = '14px';
+    note.innerHTML = '<b>Link Client Brief:</b> ' + message;
+    document.querySelector('.hero').appendChild(note);
+  }
 }
-const contextMap = {
-  client_code: 'clientCode', order_number: 'orderNumber', package: 'packageDisplay',
-  pic: 'pic', email: 'picEmail', whatsapp: 'picWhatsapp', business_name: 'businessName'
-};
-Object.keys(contextMap).forEach(key => {
-  const value = params.get(key);
-  if (value) document.getElementById(contextMap[key]).value = value;
-});
-const packageParam = params.get('package');
-if (packageParam) {
-  const packageNames = {Starter:'Starter', Bronze:'Bronze', Silver:'Silver', Gold:'Gold'};
-  document.getElementById('pkg').value = packageNames[packageParam] ? packageParam : '';
+
+async function loadBriefContext(){
+  if(!briefToken){
+    lockFormUntilContextReady(true,'Link Client Brief tidak lengkap. Gunakan link yang dikirim Khania Studio.');
+    return;
+  }
+  try{
+    const res=await fetch('api/brief-context.php?brief_token='+encodeURIComponent(briefToken),{cache:'no-store'});
+    const payload=await res.json();
+    if(!res.ok || !payload.success) throw new Error(payload.message||'Link Client Brief tidak tersedia.');
+    const d=payload.data||{};
+    document.getElementById('orderId').value=d.order_id||'';
+    document.getElementById('clientCode').value=d.client_code||'';
+    document.getElementById('orderNumber').value=d.order_number||'';
+    document.getElementById('packageDisplay').value=d.package_name||'';
+    document.getElementById('paymentStatus').value='Pembayaran Terverifikasi';
+    document.getElementById('pic').value=d.client_name||'';
+    document.getElementById('picEmail').value=d.email||'';
+    document.getElementById('picWhatsapp').value=d.whatsapp||'';
+    document.getElementById('businessName').value=d.business_name||'';
+    document.getElementById('pkg').value=d.package_name||'';
+    updatePkgRules();
+    lockFormUntilContextReady(false);
+  }catch(err){
+    lockFormUntilContextReady(true,err.message||'Link Client Brief tidak dapat dibuka.');
+  }
 }
 
 // Initial Setup
@@ -945,6 +973,7 @@ addProductItem();
 updatePkgRules();
 toggleIndustrySections();
 updateDomainFields();
+loadBriefContext();
 </script>
 </body>
 </html>

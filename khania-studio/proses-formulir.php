@@ -455,6 +455,7 @@ function postArray($key) {
     return array_filter(array_map('trim', $vals));
 }
 
+$briefToken         = post('brief_token');
 $orderId            = post('order_id');
 $siteType           = post('siteType');
 $picRole            = post('picRole');
@@ -464,13 +465,24 @@ $businessCategory = post('businessCategory');
 $businessDescription = post('businessDescription');
 $targetAudience = post('targetAudience');
 
-if ($orderId === '') {
-    fail('Link Client Brief tidak memiliki Nomor Order. Silakan gunakan link yang dikirim Khania Studio.');
+if ($briefToken === '') {
+    fail('Link Client Brief tidak memiliki token akses. Silakan gunakan link terbaru yang dikirim Khania Studio.');
 }
 
 if (!$supabase->isConfigured()) {
     fail('Sistem database Khania Studio belum siap memproses Client Brief. Silakan hubungi Khania Studio.');
 }
+
+/* IMPORTANT: the one-time token is authoritative; order/client/package/payment are read from the database. */
+$tokenHash = hash('sha256', $briefToken);
+$ctxRes = $supabase->rpcPostDetailed('get_brief_context', ['p_token_hash' => $tokenHash]);
+$ctxBody = $ctxRes['body'];
+$ctxRow = (is_array($ctxBody) && isset($ctxBody[0])) ? $ctxBody[0] : $ctxBody;
+if ($ctxRes['status'] < 200 || $ctxRes['status'] >= 300 || !is_array($ctxRow) || ($ctxRow['success'] ?? false) !== true) {
+    $ctxMessage = is_array($ctxRow) ? ($ctxRow['message'] ?? 'Link Client Brief tidak valid.') : 'Link Client Brief tidak valid.';
+    fail($ctxMessage);
+}
+$orderId = (string)$ctxRow['order_number'];
 
 /* IMPORTANT: order, client, package and payment status are authoritative on the server. */
 $orderRows = $supabase->select(
@@ -808,18 +820,24 @@ $briefData = [
     'submitted_via' => 'Client Website Brief V3 Integrated',
 ];
 
-$briefRecord = $supabase->insert('website_briefs', [
-    'order_id' => $orderRecord['id'],
+$briefRows = $supabase->select('website_briefs', 'id,status', ['order_id' => $orderRecord['id']], 1);
+$existingBrief = is_array($briefRows) && isset($briefRows[0]) ? $briefRows[0] : null;
+if ($existingBrief && strtoupper((string)($existingBrief['status'] ?? '')) !== 'DRAFT') {
+    fail('Client Brief untuk order ini sudah pernah dikirim. Jika ada koreksi, tunggu instruksi dari Khania Studio.');
+}
+
+$briefRecord = $supabase->update('website_briefs', [
     'client_id' => $orderRecord['client_id'],
     'client_code' => (string)($clientRecord['client_code'] ?? ''),
     'version' => 1,
     'brief_data' => $briefData,
     'submitted_at' => date('c'),
     'status' => 'SUBMITTED',
-]);
+], ['id' => $existingBrief['id']]);
+$briefRecord = $briefRecord[0] ?? null;
 
 if (!$briefRecord || empty($briefRecord['id'])) {
-    error_log('Khania Studio Brief: Failed to save website_briefs for order ' . $orderId);
+    error_log('Khania Studio Brief: Failed to update website_briefs for order ' . $orderId);
     fail('Data Client Brief tidak berhasil disimpan ke database. Pesanan tidak diubah. Silakan coba lagi.');
 }
 
