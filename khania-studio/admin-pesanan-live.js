@@ -157,9 +157,24 @@
         body:JSON.stringify({order_id:o.id}),
         cache:'no-store'
       });
-      const payload=await res.json().catch(()=>({}));
+      // Read the raw response first so PHP/HTTP errors are visible even when
+      // the server does not return valid JSON.
+      const raw=await res.text();
+      let payload={};
+      try{
+        payload=raw?JSON.parse(raw):{};
+      }catch(_e){
+        payload={};
+      }
+
       if(!res.ok || !payload.success){
-        showError('Pengiriman Form Brief gagal: '+(payload.message||'Respons server tidak valid.'));
+        const serverMessage=payload.message||raw.trim()||'Respons server kosong.';
+        const compact=serverMessage.length>1800
+          ? serverMessage.slice(0,1800)+'\\n...[response dipotong]'
+          : serverMessage;
+        showError(
+          'Pengiriman Form Brief gagal (HTTP '+res.status+').\\n\\n'+compact
+        );
         return;
       }
       if(payload.warning) toast(payload.warning,true);
