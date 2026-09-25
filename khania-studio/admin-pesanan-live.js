@@ -15,10 +15,16 @@
     return 'Menunggu Pembayaran';
   }
   function paymentClass(v){return v==='Pembayaran Terverifikasi'?'paid':v==='Menunggu Verifikasi Pembayaran'?'waiting':'danger';}
+  function briefRecord(o){
+    const raw=o.website_briefs;
+    if(Array.isArray(raw)) return raw[0]||null;
+    if(raw && typeof raw==='object') return raw;
+    return null;
+  }
   function briefLabel(o){
-    const b=(o.website_briefs||[])[0];
+    const b=briefRecord(o);
     if(!b) return 'Belum Dikirim';
-    if(b.brief_sent_at) return 'Form Brief Dikirim';
+    if(b.brief_sent_at) return 'Terkirim';
     if(b.status==='DRAFT') return 'Belum Dikirim';
     if(b.status==='SUBMITTED') return 'Brief Diterima';
     if(b.status==='UNDER_REVIEW') return 'Dalam Pemeriksaan';
@@ -91,10 +97,12 @@
       ['Total Tagihan',rupiah(o.total_amount)],['Email',c.email||'-'],
       ['WhatsApp',c.whatsapp||'-'],['Status Pembayaran',p],
       ['Tanggal Pembayaran',((o.payments||[])[0]?.payment_date||'-')],
-      ['Status Form Brief',b],['Tanggal Order',o.order_date||'-']
+      ['Status Form Brief',b],
+      ['Form Brief Dikirim',briefRecord(o)?.brief_sent_at||'-'],
+      ['Tanggal Order',o.order_date||'-']
     ].map(x=>`<div class="detail-item"><label>${x[0]}</label><strong>${esc(x[1])}</strong></div>`).join('');
     $('detailBriefBtn').disabled=!canSend(o);
-    $('detailBriefBtn').textContent=b==='Form Brief Dikirim'?'Kirim Ulang Form Brief':'Kirim Form Brief';
+    $('detailBriefBtn').textContent=b==='Terkirim'?'Kirim Ulang Form Brief':'Kirim Form Brief';
 
     // Add verification action into modal without changing the existing HTML.
     let verify=$('detailVerifyBtn');
@@ -142,7 +150,7 @@
   async function sendBrief(o){
     if(!canSend(o)){toast('Form Brief baru dapat dikirim setelah pembayaran terverifikasi.');return;}
     const c=o.clients||{};
-    const existing=(o.website_briefs||[])[0];
+    const existing=briefRecord(o);
     const resend=!!(existing && existing.brief_sent_at);
     const ok=confirm(
       `${resend?'Kirim ulang':'Kirim'} Form Brief?\n\nOrder: ${o.order_number}\nKlien: ${c.full_name||'-'}\nPaket: ${o.packages?.name||'-'}\nEmail: ${c.email||'-'}\n\nLink aman akan dikirim ke email klien dan berlaku 14 hari.`
@@ -157,24 +165,9 @@
         body:JSON.stringify({order_id:o.id}),
         cache:'no-store'
       });
-      // Read the raw response first so PHP/HTTP errors are visible even when
-      // the server does not return valid JSON.
-      const raw=await res.text();
-      let payload={};
-      try{
-        payload=raw?JSON.parse(raw):{};
-      }catch(_e){
-        payload={};
-      }
-
+      const payload=await res.json().catch(()=>({}));
       if(!res.ok || !payload.success){
-        const serverMessage=payload.message||raw.trim()||'Respons server kosong.';
-        const compact=serverMessage.length>1800
-          ? serverMessage.slice(0,1800)+'\\n...[response dipotong]'
-          : serverMessage;
-        showError(
-          'Pengiriman Form Brief gagal (HTTP '+res.status+').\\n\\n'+compact
-        );
+        showError('Pengiriman Form Brief gagal: '+(payload.message||'Respons server tidak valid.'));
         return;
       }
       if(payload.warning) toast(payload.warning,true);
