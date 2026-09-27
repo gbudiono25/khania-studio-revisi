@@ -18,9 +18,16 @@
   function briefLabel(o){
     const b=(o.website_briefs||[])[0];
     if(!b) return 'Belum Dikirim';
-    return b.status==='DRAFT' ? 'Form Brief Dikirim' : b.status;
+    if(b.brief_sent_at) return 'Form Brief Dikirim';
+    if(b.status==='DRAFT') return 'Belum Dikirim';
+    if(b.status==='SUBMITTED') return 'Brief Diterima';
+    if(b.status==='UNDER_REVIEW') return 'Dalam Pemeriksaan';
+    if(b.status==='NEED_CLIENT_INFO') return 'Perlu Info Klien';
+    if(b.status==='SCOPE_CONFIRMED') return 'Scope Dikonfirmasi';
+    if(b.status==='READY_FOR_PRODUCTION') return 'Siap Produksi';
+    return b.status||'Belum Dikirim';
   }
-  function briefClass(v){return ['Belum Dikirim','Form Brief Dikirim'].includes(v)?(v==='Belum Dikirim'?'waiting':'brief'):'brief';}
+  function briefClass(v){return v==='Belum Dikirim'?'waiting':'brief';}
   function canSend(o){return paymentLabel(o)==='Pembayaran Terverifikasi';}
   function canVerify(o){return paymentLabel(o)==='Menunggu Verifikasi Pembayaran';}
   function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
@@ -35,7 +42,7 @@
         clients(id,client_code,full_name,business_name,email,whatsapp),
         packages(id,code,name),
         payments(id,payment_date,amount,status,verified_at,verified_by),
-        website_briefs(id,status,submitted_at,created_at)
+        website_briefs(id,status,submitted_at,created_at,brief_sent_at)
       `)
       .order('created_at',{ascending:false});
     if(error){showError('Gagal membaca data pesanan: '+error.message);return;}
@@ -62,7 +69,7 @@
         <td><div class="row-actions">
           <button class="icon-btn" data-action="detail" data-id="${o.id}">Detail</button>
           <button class="icon-btn verify-btn" data-action="verify" data-id="${o.id}" ${canVerify(o)?'':'disabled'}>Verifikasi</button>
-          <button class="icon-btn" data-action="brief" data-id="${o.id}" ${canSend(o)?'':'disabled'}>${b==='Form Brief Dikirim'?'Kirim Ulang':'Kirim Brief'}</button>
+          <button class="icon-btn" data-action="brief" data-id="${o.id}" ${canSend(o)?'':'disabled'}>${['Brief Diterima','Dalam Pemeriksaan','Perlu Info Klien','Scope Dikonfirmasi','Siap Produksi'].includes(b)?'Review Brief':(b==='Form Brief Dikirim'?'Kirim Ulang':'Kirim Brief')}</button>
         </div></td>
       </tr>`;
     }).join('');
@@ -87,7 +94,7 @@
       ['Status Form Brief',b],['Tanggal Order',o.order_date||'-']
     ].map(x=>`<div class="detail-item"><label>${x[0]}</label><strong>${esc(x[1])}</strong></div>`).join('');
     $('detailBriefBtn').disabled=!canSend(o);
-    $('detailBriefBtn').textContent=b==='Form Brief Dikirim'?'Kirim Ulang Form Brief':'Kirim Form Brief';
+    $('detailBriefBtn').textContent=['Brief Diterima','Dalam Pemeriksaan','Perlu Info Klien','Scope Dikonfirmasi','Siap Produksi'].includes(b)?'Review Brief':(b==='Form Brief Dikirim'?'Kirim Ulang Form Brief':'Kirim Form Brief');
 
     // Add verification action into modal without changing the existing HTML.
     let verify=$('detailVerifyBtn');
@@ -132,6 +139,36 @@
     toast('Pembayaran berhasil diverifikasi. Tombol Kirim Brief sekarang aktif.',true);
   }
 
+  async function sendBrief(o){
+    if(!canSend(o)){toast('Form Brief baru dapat dikirim setelah pembayaran terverifikasi.');return;}
+    const c=o.clients||{};
+    const existing=(o.website_briefs||[])[0];
+    const resend=!!(existing && existing.brief_sent_at);
+    const ok=confirm(
+      `${resend?'Kirim ulang':'Kirim'} Form Brief?\n\nOrder: ${o.order_number}\nKlien: ${c.full_name||'-'}\nPaket: ${o.packages?.name||'-'}\nEmail: ${c.email||'-'}\n\nLink aman akan dikirim ke email klien dan berlaku 14 hari.`
+    );
+    if(!ok)return;
+    const {data:{session}}=await client.auth.getSession();
+    if(!session?.access_token){showError('Sesi admin tidak ditemukan. Silakan login ulang.');return;}
+    try{
+      const res=await fetch('api/admin-kirim-brief.php',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},
+        body:JSON.stringify({order_id:o.id}),
+        cache:'no-store'
+      });
+      const payload=await res.json().catch(()=>({}));
+      if(!res.ok || !payload.success){
+        showError('Pengiriman Form Brief gagal: '+(payload.message||'Respons server tidak valid.'));
+        return;
+      }
+      if(payload.warning) toast(payload.warning,true);
+      else toast('Form Brief berhasil dikirim ke email klien.',true);
+      $('detailModal').classList.add('hidden');
+      await load();
+    }catch(err){showError('Pengiriman Form Brief gagal: '+(err.message||'Kesalahan jaringan.'));}
+  }
+
   document.addEventListener('click',e=>{
     const a=e.target.closest('[data-action]');
     if(a){
@@ -139,13 +176,28 @@
       if(!o)return;
       if(a.dataset.action==='detail')showDetail(o);
       else if(a.dataset.action==='verify')verifyPayment(o);
-      else if(a.dataset.action==='brief')toast('Tahap pengiriman Form Brief akan kita sambungkan setelah verifikasi pembayaran stabil.',true);
+      else if(a.dataset.action==='brief'){
+        const b=(o.website_briefs||[])[0];
+        if(b && ['SUBMITTED','UNDER_REVIEW','NEED_CLIENT_INFO','SCOPE_CONFIRMED','READY_FOR_PRODUCTION'].includes(b.status)){
+          location.href='admin-form-brief.html?order_id='+encodeURIComponent(o.id);
+        }else{
+          sendBrief(o);
+        }
+      }
     }
     const c=e.target.closest('[data-close]');
     if(c)$(c.dataset.close).classList.add('hidden');
   });
 
-  $('detailBriefBtn').addEventListener('click',()=>toast('Tahap pengiriman Form Brief akan kita sambungkan setelah verifikasi pembayaran stabil.',true));
+  $('detailBriefBtn').addEventListener('click',()=>{
+    if(!selected)return;
+    const b=(selected.website_briefs||[])[0];
+    if(b && ['SUBMITTED','UNDER_REVIEW','NEED_CLIENT_INFO','SCOPE_CONFIRMED','READY_FOR_PRODUCTION'].includes(b.status)){
+      location.href='admin-form-brief.html?order_id='+encodeURIComponent(selected.id);
+    }else{
+      sendBrief(selected);
+    }
+  });
   $('refreshBtn').addEventListener('click',load);
   $('resetBtn').addEventListener('click',()=>{$('search').value='';$('paymentFilter').value='ALL';$('briefFilter').value='ALL';render();});
   ['search','paymentFilter','briefFilter'].forEach(id=>$(id).addEventListener('input',render));

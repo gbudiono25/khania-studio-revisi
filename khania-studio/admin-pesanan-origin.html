@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Pesanan | Khania Studio</title>
+<link rel="stylesheet" href="css/admin-stage2b1.css">
+</head>
+<body>
+<div id="loading" class="loading-screen">Memeriksa sesi admin...</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">KS</div>
+      <div><strong>KHANIA STUDIO</strong><small>ADMIN PANEL</small></div>
+    </div>
+    <nav>
+      <a class="nav-item" href="admin-dashboard.html">Dashboard</a>
+      <a class="nav-item active" href="admin-pesanan.html">Pesanan <span id="navCount" class="nav-count">0</span></a>
+      <a class="nav-item" href="#">Klien</a>
+      <a class="nav-item" href="#">Pembayaran</a>
+      <a class="nav-item" href="#">Voucher</a>
+      <a class="nav-item" href="#">Pesan</a>
+      <a class="nav-item" href="#">Pengumuman</a>
+      <a class="nav-item" href="#">Form Brief</a>
+      <a class="nav-item" href="#">Pengaturan</a>
+    </nav>
+    <div class="sidebar-foot">Khania Studio<br><span>Website &amp; Digital Solutions</span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">ADMIN / PESANAN</div>
+        <h1>Pesanan Website</h1>
+        <p>Data pesanan dibaca langsung dari Supabase.</p>
+      </div>
+      <div class="admin-user">
+        <span id="adminEmail" class="admin-email">Admin</span>
+        <button id="logoutBtn" class="btn ghost">Keluar</button>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      <div class="summary-card"><span>Total Pesanan</span><strong id="sumTotal">0</strong><small>Semua order</small></div>
+      <div class="summary-card"><span>Menunggu Pembayaran</span><strong id="sumPending">0</strong><small>Belum dibayar</small></div>
+      <div class="summary-card"><span>Perlu Verifikasi</span><strong id="sumVerify">0</strong><small>Bukti pembayaran masuk</small></div>
+      <div class="summary-card"><span>Pembayaran Terverifikasi</span><strong id="sumPaid">0</strong><small>Siap dikirim Form Brief</small></div>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div class="search-wrap"><input id="search" type="search" placeholder="Cari nomor order, nama klien, bisnis..."></div>
+        <select id="paymentFilter">
+          <option value="ALL">Semua pembayaran</option>
+          <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
+          <option value="Menunggu Verifikasi Pembayaran">Menunggu Verifikasi Pembayaran</option>
+          <option value="Pembayaran Terverifikasi">Pembayaran Terverifikasi</option>
+        </select>
+        <select id="briefFilter">
+          <option value="ALL">Semua status brief</option>
+          <option value="Belum Dikirim">Belum Dikirim</option>
+          <option value="Form Brief Dikirim">Form Brief Dikirim</option>
+          <option value="SUBMITTED">SUBMITTED</option>
+        </select>
+        <button class="btn ghost" id="refreshBtn">Refresh</button>
+        <button class="btn ghost" id="resetBtn">Reset</button>
+      </div>
+      <div id="errorBox" class="error-box hidden"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Order</th><th>Klien / Bisnis</th><th>Paket</th><th>Total</th>
+            <th>Pembayaran</th><th>Form Brief</th><th>Tanggal</th><th></th>
+          </tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+      <div id="empty" class="empty hidden">Tidak ada pesanan yang sesuai.</div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-backdrop hidden" id="detailModal">
+  <div class="modal large">
+    <button class="modal-close" data-close="detailModal">×</button>
+    <div class="modal-head"><div class="eyebrow">DETAIL PESANAN</div><h2 id="detailTitle">-</h2><p id="detailSubtitle">-</p></div>
+    <div id="detailContent" class="detail-grid"></div>
+    <div class="modal-actions"><button class="btn ghost" data-close="detailModal">Tutup</button><button class="btn primary" id="detailBriefBtn">Kirim Form Brief</button></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/admin-pesanan-live.js"></script>
+</body>
+</html>

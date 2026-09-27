@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Review Client Brief | Khania Studio</title>
+<link rel="stylesheet" href="css/admin-form-brief.css">
+</head>
+<body>
+<div id="loading" class="loading-screen">Memeriksa sesi admin...</div>
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">KS</div><div><strong>KHANIA STUDIO</strong><small>ADMIN PANEL</small></div></div>
+    <nav>
+      <a class="nav-item" href="admin-dashboard.html">Dashboard</a>
+      <a class="nav-item active" href="admin-pesanan.html">Pesanan</a>
+      <a class="nav-item" href="#">Klien</a><a class="nav-item" href="#">Pembayaran</a><a class="nav-item" href="#">Voucher</a><a class="nav-item" href="#">Pesan</a><a class="nav-item" href="#">Pengumuman</a><a class="nav-item" href="#">Form Brief</a><a class="nav-item" href="#">Pengaturan</a>
+    </nav>
+    <div class="sidebar-foot">Khania Studio<br><span>Website &amp; Digital Solutions</span></div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div><div class="eyebrow">ADMIN / PESANAN / FORM BRIEF</div><h1>Review Client Brief</h1><p>Mode Stage 2E-1: membaca Client Brief V3 yang sudah dikirim client.</p></div>
+      <div class="admin-user"><span id="adminEmail" class="admin-email">Admin</span><button id="logoutBtn" class="btn ghost">Keluar</button></div>
+    </header>
+    <div id="errorBox" class="error-box hidden"></div>
+    <section class="panel hero-panel">
+      <div class="back-row"><a href="admin-pesanan.html" class="back-link">← Kembali ke Pesanan</a></div>
+      <div class="eyebrow">DETAIL CLIENT BRIEF</div>
+      <h2 id="orderTitle">-</h2><p id="orderSubtitle">-</p>
+      <div id="orderMeta" class="meta-grid"></div>
+    </section>
+    <section class="panel">
+      <div class="section-head"><div><div class="eyebrow">STATUS</div><h2>Client Brief V3</h2></div><span id="briefStatus" class="status-badge">-</span></div>
+      <div id="briefMeta" class="brief-meta"></div>
+    </section>
+    <section id="briefSections" class="brief-sections"></section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/admin-form-brief.js"></script>
+</body>
+</html>
