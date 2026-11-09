@@ -6,11 +6,235 @@
   <title>Khania Studio — Jasa Pembuatan Website Profesional &amp; Custom Referensi</title>
   <meta name="description" content="Buat website profesional untuk UMKM &amp; bisnis sesuai referensi Anda. Produksi awal ≤24 jam kerja tanpa artikel SEO atau ≤72 jam dengan artikel SEO. Paket lengkap Domain &amp; Hosting 1 Tahun mulai Rp400rb.">
   
+  <!-- Preload Hero Image -->
+  <link rel="preload" as="image" href="assets/hero-khania-studio.webp" type="image/webp">
+
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=20261018-v4">
+  <style>
+    .pricing-card .btn {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .pricing-card .speed-window-pill {
+      margin-top: 1rem;
+      margin-bottom: 0;
+    }
+    .pricing-tnc-wrapper {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .pricing-tnc-summary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.625rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy-800);
+    }
+    .pricing-tnc-toggle {
+      background-color: var(--navy-900);
+      color: var(--gold-500);
+      border: 1px solid var(--gold-500);
+      border-radius: var(--radius-sm);
+      padding: 0.35rem 0.875rem;
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+    .pricing-tnc-toggle:hover {
+      background-color: var(--gold-500);
+      color: var(--navy-900);
+    }
+    .pricing-tnc-detail {
+      max-width: 820px;
+      margin: 0.875rem auto 0 auto;
+      background-color: var(--navy-900);
+      color: var(--slate-100);
+      border: 1px solid var(--gold-500);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .pricing-tnc-detail[hidden],
+    .policy-accordion-body[hidden] {
+      display: none !important;
+    }
+    .free-features-box {
+      background-color: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 1.75rem 2rem;
+      margin-top: 2rem;
+    }
+    .free-features-title {
+      color: var(--navy-900);
+      font-size: 1.25rem;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+    .free-features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem 1.25rem;
+    }
+    .free-feature-group {
+      background-color: var(--white);
+      border: 1px solid var(--slate-200);
+      border-left: 3px solid var(--gold-500);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1.125rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .free-feature-group svg {
+      color: var(--success);
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+    .free-feature-group-text {
+      font-size: 0.875rem;
+      color: var(--navy-700);
+      line-height: 1.5;
+    }
+    .free-feature-group-text strong {
+      color: var(--navy-900);
+      font-weight: 700;
+    }
+    .policy-accordions-stack {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .policy-accordion-card {
+      background-color: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .policy-accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.125rem 1.5rem;
+      background-color: var(--white);
+      cursor: pointer;
+      transition: background-color var(--transition-fast);
+    }
+    .policy-accordion-header:hover {
+      background-color: var(--slate-50);
+    }
+    .policy-accordion-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--navy-900);
+      margin: 0;
+      text-align: left;
+    }
+    .policy-accordion-body {
+      padding: 1.5rem;
+      border-top: 1px solid var(--slate-200);
+      background-color: var(--slate-50);
+    }
+    .policy-two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+    .policy-subcard {
+      background-color: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+    }
+    .policy-subcard h5 {
+      font-family: var(--font-heading);
+      color: var(--navy-900);
+      font-size: 1.05rem;
+      margin-bottom: 0.625rem;
+    }
+    .policy-subcard p {
+      font-size: 0.875rem;
+      color: var(--slate-600);
+      margin-bottom: 0.5rem;
+      line-height: 1.55;
+    }
+    .policy-subcard p:last-child {
+      margin-bottom: 0;
+    }
+    .policy-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background-color: var(--white);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-200);
+    }
+    .policy-table {
+      width: 100%;
+      min-width: 540px;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+    @media (max-width: 768px) {
+      .free-features-box {
+        padding: 1.25rem 1rem;
+      }
+      .free-features-grid,
+      .policy-two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .policy-accordion-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 1.125rem;
+        gap: 0.75rem;
+      }
+      .policy-accordion-header .pricing-tnc-toggle {
+        align-self: flex-start;
+      }
+      .policy-accordion-body {
+        padding: 1rem;
+      }
+      #hero .hero-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0;
+      }
+      #hero .hero-content {
+        display: contents;
+      }
+      #hero .hero-content > .badge-pill { order: 1; margin-bottom: 0.875rem; }
+      #hero .hero-title { order: 2; font-size: clamp(1.65rem, 6.2vw, 2.05rem); line-height: 1.25; margin-bottom: 0.875rem; }
+      #hero .hero-description { order: 3; font-size: 0.95rem; line-height: 1.55; margin-bottom: 1.25rem; }
+      #hero .hero-mockup-wrapper { order: 4; width: 100%; margin-bottom: 1.5rem; }
+      #hero .hero-actions { order: 5; flex-direction: column; align-items: stretch; width: 100%; gap: 0.75rem; margin-bottom: 1.5rem; }
+      #hero .hero-actions .btn { width: 100%; min-height: 48px; }
+      #hero .hero-subheadline-pill { order: 6; width: 100%; margin-bottom: 0.45rem; }
+      #hero .hero-subheadline-note { order: 7; margin-top: 0; margin-bottom: 1.125rem; }
+      #hero .hero-trust-badges { order: 8; width: 100%; justify-content: center; flex-wrap: wrap; margin-bottom: 0.75rem; }
+      #hero .hero-disclaimer { order: 9; margin-top: 0; }
+    }
+  </style>
   
   <!-- JavaScript Controller -->
-  <script src="js/main.js" defer></script>
+  <script src="js/main.js?v=20261018-v4" defer></script>
 </head>
 <body>
 
@@ -47,12 +271,12 @@
           <div class="hero-subheadline-pill">
             &bull; &le;24 jam kerja tanpa artikel SEO &bull; &le;72 jam kerja dengan artikel SEO*
           </div>
-          <p style="font-size: 0.78rem; color: var(--slate-400); margin-top: -1rem; margin-bottom: 1.25rem;">
+          <p class="hero-subheadline-note">
             * Syarat dan ketentuan berlaku.
           </p>
 
           <p class="hero-description">
-            Punya contoh website yang Anda suka? Kirimkan kepada kami dan kami akan menjadikannya referensi untuk membuat desain yang sesuai dengan brand bisnis Anda, dengan komitmen produksi awal cepat dan transparan.
+            Punya referensi website yang Anda suka? Kami bantu mewujudkannya dengan desain yang sesuai karakter bisnis Anda.
           </p>
 
           <div class="hero-actions">
@@ -85,17 +309,7 @@
 
         <div class="hero-mockup-wrapper">
           <div class="hero-laptop-container">
-            <img src="assets/hero-laptop-mockup.svg" alt="Presentation Mockup &mdash; Casa Loka Residence Demo Display" class="hero-mockup-frame" width="960" height="540">
-            <div class="hero-screen-overlay">
-              <img src="assets/portfolio/portfolio-casaloka.webp" alt="Casa Loka Residence &mdash; Website Demo Properti" class="hero-screenshot-img">
-            </div>
-            <div class="hero-laptop-badge">
-              <span class="hero-badge-status">DEMO</span>
-              <div class="hero-badge-text">
-                <span class="hero-badge-cat">WEBSITE PROPERTI</span>
-                <strong class="hero-badge-title">Casa Loka Residence</strong>
-              </div>
-            </div>
+            <img src="assets/hero-khania-studio.webp" alt="Contoh website properti pada laptop dan website laundry pada smartphone, hasil desain website Khania Studio." class="hero-mockup-frame" width="1024" height="498" loading="eager" fetchpriority="high" decoding="async">
           </div>
         </div>
       </div>
@@ -482,7 +696,6 @@
             <h3 class="package-name">STARTER</h3>
             <div class="package-price">Rp400.000 <span>/tahun</span></div>
             <p class="setup-fee">+ Biaya Setup Rp100.000 (Tahun Pertama)</p>
-            <div class="speed-window-pill">Produksi Awal: &le; 24 Jam Kerja*</div>
             
             <ul class="feature-list">
               <li><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Maks. 3 Halaman Website</li>
@@ -498,6 +711,7 @@
             </div>
 
             <a href="pemesanan.html?paket=starter" class="btn btn-outline-gold">Pilih Paket Starter</a>
+            <div class="speed-window-pill">Produksi Awal Maks. 24 Jam Kerja*</div>
           </div>
 
           <!-- BRONZE PACKAGE -->
@@ -505,7 +719,6 @@
             <h3 class="package-name">BRONZE</h3>
             <div class="package-price">Rp580.000 <span>/tahun</span></div>
             <p class="setup-fee">+ Biaya Setup Rp200.000 (Tahun Pertama)</p>
-            <div class="speed-window-pill">Produksi Awal: &le; 24 Jam Kerja*</div>
             
             <ul class="feature-list">
               <li><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Maks. 6 Halaman Website</li>
@@ -521,6 +734,7 @@
             </div>
 
             <a href="pemesanan.html?paket=bronze" class="btn btn-outline-gold">Pilih Paket Bronze</a>
+            <div class="speed-window-pill">Produksi Awal Maks. 24 Jam Kerja*</div>
           </div>
 
           <!-- SILVER PACKAGE (POPULAR) -->
@@ -529,7 +743,6 @@
             <h3 class="package-name">SILVER</h3>
             <div class="package-price">Rp1.100.000 <span>/tahun</span></div>
             <p class="setup-fee">+ Biaya Setup Rp400.000 (Tahun Pertama)</p>
-            <div class="speed-window-pill">Produksi Awal: &le; 72 Jam Kerja*</div>
             
             <ul class="feature-list">
               <li><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Maks. 10 Halaman Website</li>
@@ -545,6 +758,7 @@
             </div>
 
             <a href="pemesanan.html?paket=silver" class="btn btn-gold">Pilih Paket Silver</a>
+            <div class="speed-window-pill">Produksi Awal Maks. 48 Jam Kerja*</div>
           </div>
 
           <!-- GOLD PACKAGE -->
@@ -552,7 +766,6 @@
             <h3 class="package-name">GOLD</h3>
             <div class="package-price">Rp1.750.000 <span>/tahun</span></div>
             <p class="setup-fee">+ Biaya Setup Rp600.000 (Tahun Pertama)</p>
-            <div class="speed-window-pill">Produksi Awal: &le; 72 Jam Kerja*</div>
             
             <ul class="feature-list">
               <li><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Maks. 15 Halaman Website</li>
@@ -568,107 +781,150 @@
             </div>
 
             <a href="pemesanan.html?paket=gold" class="btn btn-outline-gold">Pilih Paket Gold</a>
+            <div class="speed-window-pill">Produksi Awal Maks. 72 Jam Kerja*</div>
           </div>
         </div>
 
-        <!-- Fitur Gratis Seluruh Paket -->
-        <div style="background-color: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 2rem; margin-top: 2.5rem;">
-          <h4 style="color: var(--navy-900); font-size: 1.25rem; margin-bottom: 1rem; text-align: center;">Fitur Gratis yang Diperoleh Seluruh Paket</h4>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem 1.5rem; font-size: 0.875rem; color: var(--navy-700);">
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Email bisnis</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis SSL / HTTPS</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Link tautan ke media sosial</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Integrasi WhatsApp</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Google Maps</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Bantuan penyusunan materi website</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Pemilihan gambar yang relevan</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Hero/banner website</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Responsive mobile &amp; desktop</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Basic SEO</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Content Audit</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Image Audit</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Button/Link/CTA Audit</div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="color: var(--success);"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Gratis Final Quality Assurance</div>
+        <!-- Syarat & Ketentuan Waktu Produksi Bersama -->
+        <div class="pricing-tnc-wrapper">
+          <p class="pricing-tnc-summary">
+            <span>*Syarat dan ketentuan berlaku.</span>
+            <button type="button" class="pricing-tnc-toggle" id="pricing-tnc-btn" aria-expanded="false" aria-controls="pricing-tnc-detail">Info Lebih Detail +</button>
+          </p>
+          <div id="pricing-tnc-detail" class="pricing-tnc-detail" role="region" aria-labelledby="pricing-tnc-btn" hidden>
+            <p>Waktu dihitung setelah seluruh materi dan kebutuhan website lengkap serta disepakati (Ready for Production). Sabtu, Minggu, hari libur resmi pemerintah, waktu tunggu materi/feedback klien, dan proses revisi tidak termasuk dalam waktu produksi awal.</p>
           </div>
         </div>
 
-        <!-- Definisi Ketentuan Paket -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-          <div style="background-color: var(--white); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1.5rem;">
-            <h4 style="color: var(--navy-900); font-size: 1.125rem; margin-bottom: 0.75rem;">Ketentuan Revisi Mayor &amp; Minor</h4>
-            <p style="font-size: 0.84rem; color: var(--slate-600); margin-bottom: 0.5rem; line-height: 1.5;">
-              <strong>Revisi Mayor:</strong> Perubahan besar pada struktur atau desain website, seperti perubahan layout utama, susunan section, konsep visual, atau arah desain yang telah disepakati sebelumnya.
-            </p>
-            <p style="font-size: 0.84rem; color: var(--slate-600); margin-bottom: 0.5rem; line-height: 1.5;">
-              <strong>Revisi Minor:</strong> Perubahan kecil pada website, seperti koreksi teks, perubahan kata/kalimat, penyesuaian ukuran atau posisi elemen, dan perubahan kecil pada tampilan.
-            </p>
-            <p style="font-size: 0.78rem; color: var(--slate-500); font-style: italic; margin-top: 0.5rem;">
-              *Perubahan materi atau konsep setelah data/kebutuhan website disepakati dapat diperhitungkan sebagai revisi sesuai jenis perubahannya.
-            </p>
-          </div>
+        <!-- Fitur Gratis Seluruh Paket (Ringkas & Terkelompok) -->
+        <div class="free-features-box">
+          <h4 class="free-features-title">Fitur Gratis yang Diperoleh Seluruh Paket</h4>
+          <div class="free-features-grid">
+            <div class="free-feature-group">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <div class="free-feature-group-text">
+                <strong>Teknis:</strong> Domain/email bisnis sesuai ketentuan paket, SSL/HTTPS, hosting 1 tahun, dan Google Maps.
+              </div>
+            </div>
 
-          <div style="background-color: var(--white); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1.5rem;">
-            <h4 style="color: var(--navy-900); font-size: 1.125rem; margin-bottom: 0.75rem;">Domain &amp; Tampilan Produk</h4>
-            <p style="font-size: 0.84rem; color: var(--slate-600); margin-bottom: 0.75rem; line-height: 1.5;">
-              <strong>Domain Ekonomis:</strong> Domain Ekonomis adalah domain dengan ekstensi seperti .xyz, .online, .site, .my.id, .cloud, .click, atau .asia. Pilihan ekstensi domain ekonomis dapat disesuaikan dengan ketersediaan dan ketentuan registrar. Jika masih ragu memilih domain, silakan konsultasikan dengan Khania Studio.
-            </p>
-            <p style="font-size: 0.84rem; color: var(--slate-600); line-height: 1.5;">
-              <strong>Batas Produk/Jasa:</strong> Produk/jasa boleh ditampilkan semua, tetapi jumlah produk/jasa yang ditampilkan lengkap dengan foto dan deskripsi dibatasi sesuai paket yang diambil. Maksimal deskripsi setiap produk/jasa adalah 3 paragraf.
-            </p>
-          </div>
-        </div>
+            <div class="free-feature-group">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <div class="free-feature-group-text">
+                <strong>Desain &amp; Konten:</strong> Responsive mobile &amp; desktop, hero/banner website, pemilihan gambar yang relevan, serta bantuan penyusunan materi website.
+              </div>
+            </div>
 
-        <!-- Ketentuan Maintenance & Edit Halaman -->
-        <div style="background-color: var(--white); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1.75rem; margin-top: 1.5rem;">
-          <h4 style="color: var(--navy-900); font-size: 1.25rem; margin-bottom: 1rem; text-align: center;">Ketentuan Maintenance &amp; Edit Halaman</h4>
-          
-          <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left;">
-              <thead>
-                <tr style="background-color: var(--navy-900); color: var(--white);">
-                  <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700);">Layanan Maintenance</th>
-                  <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Starter</th>
-                  <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Bronze</th>
-                  <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Silver</th>
-                  <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Gold</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); font-weight: 600;">Gratis edit halaman eksisting</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">-</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">1 halaman</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">2 halaman</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">3 halaman</td>
-                </tr>
-                <tr style="background-color: var(--slate-50);">
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); font-weight: 600;">Buat Halaman Baru oleh Pelanggan</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center; font-weight: 700; color: var(--success);">Gratis</td>
-                </tr>
-                <tr>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); font-weight: 600;">Buat Halaman Baru oleh Khania Studio</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket + Rp50.000/halaman</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket + Rp50.000/halaman</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket + Rp50.000/halaman</td>
-                  <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center; font-weight: 700;">Rp50.000/halaman</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <div class="free-feature-group">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <div class="free-feature-group-text">
+                <strong>Optimasi &amp; Pemeriksaan:</strong> Basic SEO, Content Audit, Image Audit, Button/Link/CTA Audit, dan Final Quality Assurance.
+              </div>
+            </div>
 
-          <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-around; background-color: var(--slate-50); padding: 0.875rem 1rem; border-radius: var(--radius-sm); font-size: 0.84rem; color: var(--slate-700);">
-            <div><strong>Ketentuan Tambahan Edit Halaman Eksisting:</strong> Rp25.000/halaman (Berlaku semua paket)</div>
-            <div><strong>Ketentuan Edit Gambar Basic:</strong> Rp20.000/gambar (Berlaku semua paket)</div>
+            <div class="free-feature-group">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <div class="free-feature-group-text">
+                <strong>Integrasi:</strong> Link tautan ke media sosial dan integrasi WhatsApp.
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Annual Renewal Formula Box -->
-        <div class="renewal-formula-box">
-          <h4>Ketentuan Perpanjangan Tahun Berikutnya</h4>
-          <p>Tahun Berikutnya = Biaya Paket Tahunan + Biaya Perpanjangan Domain (Mengikuti tarif yang berlaku pada saat perpanjangan, belum termasuk PPN).</p>
+        <!-- Kelompok Accordion Ketentuan Layanan -->
+        <div class="policy-accordions-stack">
+          <!-- Kelompok 1: Ketentuan Revisi, Domain & Tampilan Produk -->
+          <div class="policy-accordion-card">
+            <div class="policy-accordion-header" data-accordion-target="accordion-revisi-domain">
+              <h4 class="policy-accordion-title">Ketentuan Revisi, Domain &amp; Tampilan Produk</h4>
+              <button type="button" class="pricing-tnc-toggle policy-accordion-btn" id="btn-revisi-domain" data-target="accordion-revisi-domain" aria-expanded="false" aria-controls="accordion-revisi-domain">Info Lebih Detail +</button>
+            </div>
+            <div id="accordion-revisi-domain" class="policy-accordion-body" role="region" aria-labelledby="btn-revisi-domain" hidden>
+              <div class="policy-two-col">
+                <div class="policy-subcard">
+                  <h5>Ketentuan Revisi Mayor &amp; Minor</h5>
+                  <p>
+                    <strong>Revisi Mayor:</strong> Perubahan besar pada struktur atau desain website, seperti perubahan layout utama, susunan section, konsep visual, atau arah desain yang telah disepakati sebelumnya.
+                  </p>
+                  <p>
+                    <strong>Revisi Minor:</strong> Perubahan kecil pada website, seperti koreksi teks, perubahan kata/kalimat, penyesuaian ukuran atau posisi elemen, dan perubahan kecil pada tampilan.
+                  </p>
+                  <p style="font-size: 0.78rem; color: var(--slate-500); font-style: italic; margin-top: 0.5rem;">
+                    *Perubahan materi atau konsep setelah data/kebutuhan website disepakati dapat diperhitungkan sebagai revisi sesuai jenis perubahannya.
+                  </p>
+                </div>
+
+                <div class="policy-subcard">
+                  <h5>Domain &amp; Tampilan Produk</h5>
+                  <p>
+                    <strong>Domain Ekonomis:</strong> Domain Ekonomis adalah domain dengan ekstensi seperti .xyz, .online, .site, .my.id, .cloud, .click, atau .asia. Pilihan ekstensi domain ekonomis dapat disesuaikan dengan ketersediaan dan ketentuan registrar. Jika masih ragu memilih domain, silakan konsultasikan dengan Khania Studio.
+                  </p>
+                  <p>
+                    <strong>Batas Produk/Jasa:</strong> Produk/jasa boleh ditampilkan semua, tetapi jumlah produk/jasa yang ditampilkan lengkap dengan foto dan deskripsi dibatasi sesuai paket yang diambil. Maksimal deskripsi setiap produk/jasa adalah 3 paragraf.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kelompok 2: Ketentuan Maintenance, Edit Halaman & Perpanjangan -->
+          <div class="policy-accordion-card">
+            <div class="policy-accordion-header" data-accordion-target="accordion-maintenance-renewal">
+              <h4 class="policy-accordion-title">Ketentuan Maintenance, Edit Halaman &amp; Perpanjangan</h4>
+              <button type="button" class="pricing-tnc-toggle policy-accordion-btn" id="btn-maintenance-renewal" data-target="accordion-maintenance-renewal" aria-expanded="false" aria-controls="accordion-maintenance-renewal">Info Lebih Detail +</button>
+            </div>
+            <div id="accordion-maintenance-renewal" class="policy-accordion-body" role="region" aria-labelledby="btn-maintenance-renewal" hidden>
+              <div class="policy-subcard" style="margin-bottom: 1.25rem;">
+                <h5 style="text-align: center; margin-bottom: 1rem;">Ketentuan Maintenance &amp; Edit Halaman</h5>
+                <div class="policy-table-wrap">
+                  <table class="policy-table">
+                    <thead>
+                      <tr style="background-color: var(--navy-900); color: var(--white);">
+                        <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700);">Layanan Maintenance</th>
+                        <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Starter</th>
+                        <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Bronze</th>
+                        <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Silver</th>
+                        <th style="padding: 0.75rem 1rem; border: 1px solid var(--navy-700); text-align: center;">Gold</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); font-weight: 600;">Gratis edit halaman eksisting</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">-</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">1 halaman</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">2 halaman</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">3 halaman</td>
+                      </tr>
+                      <tr style="background-color: var(--slate-50);">
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); font-weight: 600;">Buat Halaman Baru oleh Pelanggan</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center; font-weight: 700; color: var(--success);">Gratis</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); font-weight: 600;">Buat Halaman Baru oleh Khania Studio</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket + Rp50.000/halaman</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket + Rp50.000/halaman</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center;">Upgrade paket + Rp50.000/halaman</td>
+                        <td style="padding: 0.75rem 1rem; border: 1px solid var(--slate-200); text-align: center; font-weight: 700;">Rp50.000/halaman</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; justify-content: space-around; background-color: var(--slate-50); padding: 0.875rem 1rem; border-radius: var(--radius-sm); font-size: 0.84rem; color: var(--slate-700);">
+                  <div><strong>Ketentuan Tambahan Edit Halaman Eksisting:</strong> Rp25.000/halaman (Berlaku semua paket)</div>
+                  <div><strong>Ketentuan Edit Gambar Basic:</strong> Rp20.000/gambar (Berlaku semua paket)</div>
+                </div>
+              </div>
+
+              <!-- Annual Renewal Formula Box -->
+              <div class="renewal-formula-box" style="margin-top: 0;">
+                <h4>Ketentuan Perpanjangan Tahun Berikutnya</h4>
+                <p>Tahun Berikutnya = Biaya Paket Tahunan + Biaya Perpanjangan Domain (Mengikuti tarif yang berlaku pada saat perpanjangan, belum termasuk PPN).</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

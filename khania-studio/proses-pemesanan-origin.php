@@ -24,6 +24,11 @@ function fail($message, $status = 400) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $paketParam = strtolower(trim((string)($_GET['paket'] ?? $_GET['package'] ?? '')));
+    if (in_array($paketParam, ['starter', 'bronze', 'silver', 'gold'], true)) {
+        header('Location: pemesanan.html?paket=' . rawurlencode($paketParam));
+        exit;
+    }
     header('Location: index.html#harga');
     exit;
 }

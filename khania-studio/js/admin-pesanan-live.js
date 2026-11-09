@@ -15,16 +15,20 @@
     return 'Menunggu Pembayaran';
   }
   function paymentClass(v){return v==='Pembayaran Terverifikasi'?'paid':v==='Menunggu Verifikasi Pembayaran'?'waiting':'danger';}
+  function getBrief(o){return (o.website_briefs||[])[0]||null;}
+  function isReviewableBrief(o){
+    const s=getBrief(o)?.status;
+    return ['SUBMITTED','UNDER_REVIEW','NEED_CLIENT_INFO','SCOPE_CONFIRMED','READY_FOR_PRODUCTION'].includes(s);
+  }
   function briefLabel(o){
-    const b=(o.website_briefs||[])[0];
+    const b=getBrief(o);
     if(!b) return 'Belum Dikirim';
-    if(b.brief_sent_at) return 'Form Brief Dikirim';
-    if(b.status==='DRAFT') return 'Belum Dikirim';
     if(b.status==='SUBMITTED') return 'Brief Diterima';
     if(b.status==='UNDER_REVIEW') return 'Dalam Pemeriksaan';
     if(b.status==='NEED_CLIENT_INFO') return 'Perlu Info Klien';
     if(b.status==='SCOPE_CONFIRMED') return 'Scope Dikonfirmasi';
     if(b.status==='READY_FOR_PRODUCTION') return 'Siap Produksi';
+    if(b.status==='DRAFT') return b.brief_sent_at?'Form Brief Dikirim':'Belum Dikirim';
     return b.status||'Belum Dikirim';
   }
   function briefClass(v){return v==='Belum Dikirim'?'waiting':'brief';}
@@ -69,7 +73,9 @@
         <td><div class="row-actions">
           <button class="icon-btn" data-action="detail" data-id="${o.id}">Detail</button>
           <button class="icon-btn verify-btn" data-action="verify" data-id="${o.id}" ${canVerify(o)?'':'disabled'}>Verifikasi</button>
-          <button class="icon-btn" data-action="brief" data-id="${o.id}" ${canSend(o)?'':'disabled'}>${['Brief Diterima','Dalam Pemeriksaan','Perlu Info Klien','Scope Dikonfirmasi','Siap Produksi'].includes(b)?'Review Brief':(b==='Form Brief Dikirim'?'Kirim Ulang':'Kirim Brief')}</button>
+          ${isReviewableBrief(o)
+            ? `<button class="icon-btn" data-action="review" data-id="${o.id}">Review Brief</button>`
+            : `<button class="icon-btn" data-action="brief" data-id="${o.id}" ${canSend(o)?'':'disabled'}>${b==='Form Brief Dikirim'?'Kirim Ulang':'Kirim Brief'}</button>`}
         </div></td>
       </tr>`;
     }).join('');
@@ -93,8 +99,8 @@
       ['Tanggal Pembayaran',((o.payments||[])[0]?.payment_date||'-')],
       ['Status Form Brief',b],['Tanggal Order',o.order_date||'-']
     ].map(x=>`<div class="detail-item"><label>${x[0]}</label><strong>${esc(x[1])}</strong></div>`).join('');
-    $('detailBriefBtn').disabled=!canSend(o);
-    $('detailBriefBtn').textContent=['Brief Diterima','Dalam Pemeriksaan','Perlu Info Klien','Scope Dikonfirmasi','Siap Produksi'].includes(b)?'Review Brief':(b==='Form Brief Dikirim'?'Kirim Ulang Form Brief':'Kirim Form Brief');
+    $('detailBriefBtn').disabled=!(canSend(o)||isReviewableBrief(o));
+    $('detailBriefBtn').textContent=isReviewableBrief(o)?'Review Client Brief':(b==='Form Brief Dikirim'?'Kirim Ulang Form Brief':'Kirim Form Brief');
 
     // Add verification action into modal without changing the existing HTML.
     let verify=$('detailVerifyBtn');
@@ -176,14 +182,8 @@
       if(!o)return;
       if(a.dataset.action==='detail')showDetail(o);
       else if(a.dataset.action==='verify')verifyPayment(o);
-      else if(a.dataset.action==='brief'){
-        const b=(o.website_briefs||[])[0];
-        if(b && ['SUBMITTED','UNDER_REVIEW','NEED_CLIENT_INFO','SCOPE_CONFIRMED','READY_FOR_PRODUCTION'].includes(b.status)){
-          location.href='admin-form-brief.html?order_id='+encodeURIComponent(o.id);
-        }else{
-          sendBrief(o);
-        }
-      }
+      else if(a.dataset.action==='brief')sendBrief(o);
+      else if(a.dataset.action==='review')location.href='admin-form-brief.html?order_id='+encodeURIComponent(o.id);
     }
     const c=e.target.closest('[data-close]');
     if(c)$(c.dataset.close).classList.add('hidden');
@@ -191,8 +191,7 @@
 
   $('detailBriefBtn').addEventListener('click',()=>{
     if(!selected)return;
-    const b=(selected.website_briefs||[])[0];
-    if(b && ['SUBMITTED','UNDER_REVIEW','NEED_CLIENT_INFO','SCOPE_CONFIRMED','READY_FOR_PRODUCTION'].includes(b.status)){
+    if(isReviewableBrief(selected)){
       location.href='admin-form-brief.html?order_id='+encodeURIComponent(selected.id);
     }else{
       sendBrief(selected);

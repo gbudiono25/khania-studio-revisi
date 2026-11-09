@@ -129,6 +129,65 @@ function initPricingDrawers() {
       }
     });
   });
+
+  // Centralized Pricing Production Time Terms & Conditions Toggle
+  const tncBtn = document.getElementById('pricing-tnc-btn');
+  const tncDetail = document.getElementById('pricing-tnc-detail');
+
+  if (tncBtn && tncDetail) {
+    tncBtn.addEventListener('click', () => {
+      const isExpanded = tncBtn.getAttribute('aria-expanded') === 'true';
+      const nextState = !isExpanded;
+
+      tncBtn.setAttribute('aria-expanded', nextState ? 'true' : 'false');
+      if (nextState) {
+        tncDetail.removeAttribute('hidden');
+        tncDetail.classList.add('open');
+        tncBtn.innerHTML = 'Tutup Detail &minus;';
+      } else {
+        tncDetail.setAttribute('hidden', '');
+        tncDetail.classList.remove('open');
+        tncBtn.innerHTML = 'Info Lebih Detail +';
+      }
+    });
+  }
+
+  // Policy Accordions (Revisi/Domain & Maintenance/Perpanjangan)
+  const policyBtns = document.querySelectorAll('.policy-accordion-btn');
+  policyBtns.forEach(btn => {
+    const toggleAccordion = () => {
+      const targetId = btn.getAttribute('aria-controls');
+      if (!targetId) return;
+      const body = document.getElementById(targetId);
+      if (!body) return;
+
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      const nextState = !isExpanded;
+
+      btn.setAttribute('aria-expanded', nextState ? 'true' : 'false');
+      if (nextState) {
+        body.removeAttribute('hidden');
+        body.classList.add('open');
+        btn.innerHTML = 'Tutup Detail &minus;';
+      } else {
+        body.setAttribute('hidden', '');
+        body.classList.remove('open');
+        btn.innerHTML = 'Info Lebih Detail +';
+      }
+    };
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleAccordion();
+    });
+
+    const header = btn.closest('.policy-accordion-header');
+    if (header) {
+      header.addEventListener('click', () => {
+        toggleAccordion();
+      });
+    }
+  });
 }
 
 /**

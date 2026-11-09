@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Dashboard | Khania Studio</title>
+<link rel="stylesheet" href="css/admin-stage2b1.css">
+<link rel="stylesheet" href="css/admin-dashboard.css">
+</head>
+<body>
+<div id="loading" class="loading-screen">Memeriksa sesi admin...</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">KS</div>
+      <div><strong>KHANIA STUDIO</strong><small>ADMIN PANEL</small></div>
+    </div>
+    <nav>
+      <a class="nav-item active" href="admin-dashboard.html">Dashboard</a>
+      <a class="nav-item" href="admin-pesanan.html">Pesanan <span id="navCount" class="nav-count">0</span></a>
+      <a class="nav-item" href="#">Klien</a>
+      <a class="nav-item" href="#">Pembayaran</a>
+      <a class="nav-item" href="#">Voucher</a>
+      <a class="nav-item" href="#">Pesan</a>
+      <a class="nav-item" href="#">Pengumuman</a>
+      <a class="nav-item" href="admin-form-brief.html">Form Brief</a>
+      <a class="nav-item" href="#">Pengaturan</a>
+    </nav>
+    <div class="sidebar-foot">Khania Studio<br><span>Website &amp; Digital Solutions</span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">ADMIN / DASHBOARD</div>
+        <h1>Dashboard Admin</h1>
+        <p>Ringkasan pesanan, pembayaran, dan Client Brief.</p>
+      </div>
+      <div class="admin-user">
+        <span id="adminEmail" class="admin-email">Admin</span>
+        <button id="refreshBtn" class="btn ghost">Refresh</button>
+        <button id="logoutBtn" class="btn ghost">Keluar</button>
+      </div>
+    </header>
+
+    <div id="errorBox" class="error-box hidden"></div>
+
+    <section class="summary-grid dashboard-summary">
+      <a class="summary-card dashboard-card" href="admin-pesanan.html" data-filter="all">
+        <span>Total Pesanan</span><strong id="sumTotal">0</strong><small>Semua order</small>
+      </a>
+      <a class="summary-card dashboard-card" href="admin-pesanan.html" data-filter="pending-payment">
+        <span>Menunggu Pembayaran</span><strong id="sumPending">0</strong><small>Belum dibayar</small>
+      </a>
+      <a class="summary-card dashboard-card" href="admin-pesanan.html" data-filter="verification">
+        <span>Perlu Verifikasi</span><strong id="sumVerify">0</strong><small>Bukti pembayaran masuk</small>
+      </a>
+      <a class="summary-card dashboard-card" href="admin-pesanan.html" data-filter="paid">
+        <span>Pembayaran Terverifikasi</span><strong id="sumPaid">0</strong><small>Siap diproses ke tahap brief</small>
+      </a>
+      <a class="summary-card dashboard-card" href="admin-pesanan.html" data-filter="brief-review">
+        <span>Brief Perlu Ditinjau</span><strong id="sumBriefReview">0</strong><small>Brief sudah diterima</small>
+      </a>
+      <a class="summary-card dashboard-card" href="admin-pesanan.html" data-filter="ready">
+        <span>Siap Produksi</span><strong id="sumReady">0</strong><small>Scope sudah dikonfirmasi</small>
+      </a>
+    </section>
+
+    <section class="dashboard-grid">
+      <div class="panel action-panel">
+        <div class="panel-head">
+          <div><div class="eyebrow">PRIORITAS</div><h2>Perlu Tindakan</h2></div>
+        </div>
+        <div id="actionList" class="action-list"></div>
+      </div>
+
+      <div class="panel workflow-panel">
+        <div class="panel-head">
+          <div><div class="eyebrow">WORKFLOW</div><h2>Status Pekerjaan</h2></div>
+        </div>
+        <div id="workflowList" class="workflow-list"></div>
+      </div>
+    </section>
+
+    <section class="panel recent-panel">
+      <div class="panel-head">
+        <div><div class="eyebrow">ORDER TERBARU</div><h2>Pesanan Terbaru</h2></div>
+        <a class="btn ghost" href="admin-pesanan.html">Lihat Semua Pesanan</a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Order</th><th>Klien / Bisnis</th><th>Paket</th><th>Pembayaran</th><th>Brief</th><th>Tanggal</th><th></th>
+          </tr></thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+      <div id="recentEmpty" class="empty hidden">Belum ada pesanan.</div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/admin-dashboard.js"></script>
+</body>
+</html>

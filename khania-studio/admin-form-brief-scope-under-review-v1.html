@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Scope Review | Khania Studio</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+.app{display:flex;min-height:100vh}
+.sidebar{width:252px;background:#0d172b;color:#fff;padding:22px 16px;position:fixed;inset:0 auto 0 0}
+.brand{display:flex;gap:12px;align-items:center;padding:8px}
+.brand-mark{width:42px;height:42px;border-radius:10px;background:#d4af37;color:#111827;display:grid;place-items:center;font-weight:800}
+.brand small{display:block;color:#aeb8ca;margin-top:4px;font-size:11px}
+.nav{margin-top:28px}
+.nav a{display:block;color:#dce3ef;text-decoration:none;padding:13px 12px;border-radius:9px;margin:4px 0}
+.nav a.active{background:#202d44;border-left:3px solid #d4af37;color:#fff}
+.sidefoot{position:absolute;bottom:24px;left:24px;color:#c8d0de;font-size:12px;line-height:1.5}
+.main{margin-left:252px;width:calc(100% - 252px);padding:34px;max-width:1500px}
+.eyebrow{font-size:12px;color:#667085;letter-spacing:.08em;font-weight:700}
+.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.top h1{font:700 38px Georgia,serif;margin:8px 0}
+.top p{margin:0;color:#667085}
+.badge{display:inline-flex;padding:9px 14px;border-radius:999px;background:#e5efff;color:#155eef;font-weight:700}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.meta-card,.panel,.review-card{background:#fff;border:1px solid #e4e7ec;border-radius:14px}
+.meta-card{padding:16px}
+.meta-card span,.field label{display:block;color:#667085;font-size:12px;margin-bottom:6px}
+.meta-card strong{font-size:15px}
+.notice{padding:14px 16px;background:#fff7df;border:1px solid #f1d27a;border-radius:12px;margin-bottom:18px;color:#6b4e00}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0}
+.summary{color:#667085;font-size:14px}
+.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:700;cursor:pointer}
+.btn.primary{background:#101828;color:#fff}
+.btn.secondary{background:#eef2f6;color:#172033}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.accordion{margin:12px 0}
+.acc-head{width:100%;border:1px solid #e4e7ec;background:#fff;border-radius:12px;padding:17px 18px;text-align:left;font-weight:800;font-size:15px;display:flex;justify-content:space-between;cursor:pointer}
+.acc-body{display:none;background:#fff;border:1px solid #e4e7ec;border-top:0;border-radius:0 0 12px 12px;padding:18px}
+.accordion.open .acc-head{border-radius:12px 12px 0 0;background:#fafbfc}
+.accordion.open .acc-body{display:block}
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.field{border:1px solid #e4e7ec;border-radius:10px;padding:13px}
+.field .value{white-space:pre-wrap;line-height:1.55}
+.empty{color:#98a2b3;font-style:italic}
+.review-card{margin-top:18px;padding:18px;border-left:4px solid #d4af37}
+.review-title{font-weight:800;margin-bottom:12px}
+.choices{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.choice{border:1px solid #d0d5dd;border-radius:9px;padding:10px;background:#fff;cursor:pointer;text-align:center;font-size:13px}
+.choice input{display:none}
+.choice:has(input:checked){background:#fff7df;border-color:#d4af37;font-weight:700}
+.note{width:100%;min-height:80px;border:1px solid #d0d5dd;border-radius:9px;padding:10px;resize:vertical;margin-top:10px;font:inherit}
+.product{border:1px solid #e4e7ec;border-radius:12px;padding:16px;margin:10px 0}
+.product h3{margin:0 0 12px}
+.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.footer-review{margin:24px 0;padding:20px;background:#fff;border:1px solid #e4e7ec;border-radius:14px}
+.status-line{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.status-pill{padding:7px 11px;border-radius:999px;background:#eef2f6;font-size:12px;font-weight:700}
+@media(max-width:900px){
+ .sidebar{position:static;width:100%;height:auto}.app{display:block}
+ .main{margin-left:0;width:100%;padding:20px}.sidefoot{display:none}
+ .meta{grid-template-columns:repeat(2,1fr)}.choices{grid-template-columns:repeat(2,1fr)}
+ .kv,.product-grid{grid-template-columns:1fr}.top{display:block}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">KS</div><div><strong>KHANIA STUDIO</strong><small>ADMIN PANEL</small></div></div>
+  <nav class="nav">
+    <a href="admin-pesanan.html">Pesanan</a>
+    <a class="active" href="#">Form Brief</a>
+  </nav>
+  <div class="sidefoot">Khania Studio<br>Website &amp; Digital Solutions</div>
+</aside>
+
+<main class="main">
+  <div id="loading">Memuat Scope Review...</div>
+
+  <div id="appContent" style="display:none">
+    <div class="top">
+      <div>
+        <div class="eyebrow">ADMIN AREA · FORM BRIEF · SCOPE REVIEW</div>
+        <h1>Scope Review Client Brief</h1>
+        <p id="subtitle">-</p>
+      </div>
+      <div id="statusBadge" class="badge">-</div>
+    </div>
+
+    <div id="meta" class="meta"></div>
+
+    <div class="notice">
+      <b>Stage 2E-2B-1 — Mode Review UI.</b>
+      Pada tahap ini keputusan dan catatan hanya ditampilkan sebagai simulasi UI.
+      <b>Belum ada data yang disimpan ke Supabase.</b>
+    </div>
+
+    <div class="toolbar">
+      <div class="summary" id="summary">-</div>
+       <button class="btn primary" id="startReviewBtn" type="button">Mulai Pemeriksaan</button>
+      <button class="btn secondary" onclick="location.href='admin-pesanan.html'">Kembali ke Pesanan</button>
+    </div>
+
+    <div id="sections"></div>
+
+    <div class="footer-review">
+      <div class="status-line">
+        <div>
+          <b>Status Workflow</b>
+          <div class="summary" style="margin-top:6px">
+            Status workflow Form Brief dikendalikan oleh database. Tindakan Admin pada tahap ini mengubah status dari SUBMITTED menjadi UNDER_REVIEW.
+          </div>
+        </div>
+        <span class="status-pill" id="workflowStatus">SUBMITTED</span>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn secondary" disabled>Simpan Draft Review</button>
+        <button class="btn secondary" disabled>Minta Info Client</button>
+        <button class="btn primary" disabled>Konfirmasi Scope</button>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const ORDER_ID=new URLSearchParams(location.search).get('order_id');
+let REVIEW_CONTEXT=null;
+
+const SECTION_TITLES={
+ 'A. DATA ORDER & PEMESAN':'A. DATA ORDER & PEMESAN',
+ 'B. INFORMASI BISNIS':'B. INFORMASI BISNIS',
+ 'C. TUJUAN UTAMA WEBSITE':'C. TUJUAN UTAMA WEBSITE',
+ 'D. STRUKTUR HALAMAN':'D. STRUKTUR HALAMAN',
+ 'E. FITUR & FUNGSI WEBSITE':'E. FITUR & FUNGSI WEBSITE',
+ 'F. DOMAIN WEBSITE':'F. DOMAIN WEBSITE',
+ 'G. WEBSITE LAMA & REDESIGN':'G. WEBSITE LAMA & REDESIGN',
+ 'H. PRODUK / JASA':'H. PRODUK / JASA',
+ 'I. BRAND & DESIGN DIRECTION':'I. BRAND & DESIGN DIRECTION',
+ 'J. REFERENSI DESAIN':'J. REFERENSI DESAIN',
+ 'K. PESAN UTAMA WEBSITE':'K. PESAN UTAMA WEBSITE',
+ 'L. DATA SPESIFIK INDUSTRI':'L. DATA SPESIFIK INDUSTRI',
+ 'M. KREDIBILITAS & TESTIMONIAL':'M. KREDIBILITAS & TESTIMONIAL',
+ 'N. UPLOAD ASET & DOKUMEN':'N. UPLOAD ASET & DOKUMEN',
+ 'O. KONTAK BISNIS & MEDIA SOSIAL':'O. KONTAK BISNIS & MEDIA SOSIAL',
+ 'P. SEO & TARGET PASAR':'P. SEO & TARGET PASAR',
+ 'Q. PERIKSA & KONFIRMASI':'Q. PERIKSA & KONFIRMASI',
+ 'R. PERMINTAAN TAMBAHAN / KEBUTUHAN KHUSUS':'R. PERMINTAAN TAMBAHAN / KEBUTUHAN KHUSUS'
+};
+
+const REVIEWABLE=new Set([
+ 'D. STRUKTUR HALAMAN',
+ 'E. FITUR & FUNGSI WEBSITE',
+ 'F. DOMAIN WEBSITE',
+ 'G. WEBSITE LAMA & REDESIGN',
+ 'H. PRODUK / JASA',
+ 'I. BRAND & DESIGN DIRECTION',
+ 'J. REFERENSI DESAIN',
+ 'K. PESAN UTAMA WEBSITE',
+ 'L. DATA SPESIFIK INDUSTRI',
+ 'M. KREDIBILITAS & TESTIMONIAL',
+ 'N. UPLOAD ASET & DOKUMEN',
+ 'O. KONTAK BISNIS & MEDIA SOSIAL',
+ 'P. SEO & TARGET PASAR',
+ 'R. PERMINTAAN TAMBAHAN / KEBUTUHAN KHUSUS'
+]);
+
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({
+ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+}[m]));
+
+const human=v=>String(v).replace(/_/g,' ').replace(/\s+/g,' ')
+ .replace(/\b\w/g,c=>c.toUpperCase());
+
+function formatValue(v){
+ if(v===null||v===undefined||v==='')return '<span class="empty">Belum diisi</span>';
+ if(Array.isArray(v))return v.length?v.map(x=>formatValue(x)).join('<br>'):'<span class="empty">Belum diisi</span>';
+ if(typeof v==='object'){
+   return Object.entries(v).map(([k,val])=>'<b>'+esc(human(k))+'</b>: '+formatValue(val)).join('<br>');
+ }
+ return esc(v);
+}
+
+function reviewBox(section,index){
+ return `<div class="review-card">
+   <div class="review-title">Keputusan Scope — ${esc(section)}</div>
+   <div class="choices">
+     <label class="choice"><input type="radio" name="decision_${index}" value="INCLUDED"><span>Termasuk Paket</span></label>
+     <label class="choice"><input type="radio" name="decision_${index}" value="ADDITIONAL_COST"><span>Tambahan Biaya</span></label>
+     <label class="choice"><input type="radio" name="decision_${index}" value="NEED_CLARIFICATION"><span>Perlu Informasi Klien</span></label>
+     <label class="choice"><input type="radio" name="decision_${index}" value="NOT_INCLUDED"><span>Tidak Diperlukan</span></label>
+   </div>
+   <textarea class="note" placeholder="Catatan Admin — hanya untuk internal Khania Studio"></textarea>
+ </div>`;
+}
+
+function renderProducts(products){
+ if(!Array.isArray(products)||!products.length)return '';
+ return `<div style="margin-top:14px"><b>Detail Produk / Jasa</b>${
+   products.map((p,i)=>`<div class="product">
+     <h3>${i+1}. ${esc(p.name||p.title||'Produk/Jasa')}</h3>
+     <div class="product-grid">${
+       Object.entries(p).filter(([k])=>!['name','title'].includes(k))
+       .map(([k,v])=>`<div class="field"><label>${esc(human(k))}</label><div class="value">${formatValue(v)}</div></div>`).join('')
+     }</div>
+   </div>`).join('')
+ }</div>`;
+}
+
+async function updateBriefStatus(nextStatus){
+  if(!REVIEW_CONTEXT?.brief?.id) throw Error('Data brief belum siap.');
+  const {data,error}=await REVIEW_CONTEXT.client
+    .from('website_briefs')
+    .update({status:nextStatus})
+    .eq('id',REVIEW_CONTEXT.brief.id)
+    .select('id,status')
+    .single();
+  if(error) throw Error(error.message||'Gagal memperbarui status brief.');
+  REVIEW_CONTEXT.brief.status=data.status;
+  renderWorkflowState();
+}
+
+function renderWorkflowState(){
+  const status=REVIEW_CONTEXT?.brief?.status||'-';
+  const badge=document.getElementById('statusBadge');
+  const pill=document.getElementById('workflowStatus');
+  const start=document.getElementById('startReviewBtn');
+  const notice=document.getElementById('workflowNotice');
+  if(!badge||!pill) return;
+  badge.textContent=status==='SUBMITTED'?'Brief Diterima':human(status);
+  pill.textContent=status;
+  if(start){ start.style.display=status==='SUBMITTED'?'inline-block':'none'; start.disabled=false; }
+  if(notice){ notice.innerHTML=status==='SUBMITTED' ? '<b>Menunggu Pemeriksaan Admin.</b> Brief sudah diterima dan siap diperiksa.' : '<b>Status workflow:</b> '+esc(status)+'.'; }
+  const count=document.querySelectorAll('.accordion').length;
+  document.getElementById('summary').textContent=`${count} section tersedia · Status ${status}`;
+}
+
+async function main(){
+ try{
+   const cfgRes=await fetch('api/supabase-config.php',{cache:'no-store'});
+   const cfg=await cfgRes.json();
+   if(!cfg.success)throw Error(cfg.message||'Config Supabase gagal.');
+
+   const client=supabase.createClient(cfg.url,cfg.anonKey);
+   const {data:{session}}=await client.auth.getSession();
+   if(!session)throw Error('Session Admin tidak ditemukan. Silakan login.');
+
+   const {data:profile,error:pe}=await client
+     .from('profiles').select('role,full_name').eq('id',session.user.id).maybeSingle();
+   if(pe||!profile||profile.role!=='admin')throw Error('Akses Admin tidak valid.');
+
+   const {data:order,error:oe}=await client
+     .from('orders')
+     .select('id,order_number,status,total_amount,order_date,client_id,clients(id,client_code,full_name,business_name,email,whatsapp),packages(id,code,name)')
+     .eq('id',ORDER_ID).maybeSingle();
+   if(oe||!order)throw Error(oe?.message||'Order tidak ditemukan.');
+
+   const {data:brief,error:be}=await client
+     .from('website_briefs')
+     .select('id,order_id,client_id,client_code,version,status,submitted_at,brief_sent_at,brief_data')
+     .eq('order_id',ORDER_ID).order('created_at',{ascending:false}).limit(1).maybeSingle();
+   if(be||!brief)throw Error(be?.message||'Client Brief tidak ditemukan.');
+
+   REVIEW_CONTEXT={client,brief,session};
+
+   const c=order.clients||{};
+   document.getElementById('subtitle').textContent=
+     `${order.order_number} — ${c.full_name||'-'} / ${c.business_name||'-'}`;
+
+   renderWorkflowState();
+
+   const meta=[
+     ['Kode Klien',brief.client_code||c.client_code||'-'],
+     ['Order ID',order.order_number],
+     ['Paket',order.packages?.name||'-'],
+     ['Pembayaran',order.status==='payment_verified'?'Pembayaran Terverifikasi':human(order.status)],
+     ['Nama PIC',c.full_name||'-'],
+     ['Email PIC',c.email||'-'],
+     ['WhatsApp PIC',c.whatsapp||'-'],
+     ['Tanggal Submit',brief.submitted_at?new Date(brief.submitted_at).toLocaleString('id-ID'):'-']
+   ];
+
+   document.getElementById('meta').innerHTML=meta.map(x=>
+     `<div class="meta-card"><span>${esc(x[0])}</span><strong>${esc(x[1])}</strong></div>`
+   ).join('');
+
+   const sections=brief.brief_data?.sections||{};
+   const ordered=Object.keys(SECTION_TITLES)
+     .filter(k=>Object.prototype.hasOwnProperty.call(sections,k));
+
+   let n=0;
+
+   document.getElementById('sections').innerHTML=ordered.map(key=>{
+     const data=sections[key]||{};
+     const review=REVIEWABLE.has(key);
+     const content=typeof data==='object'&&!Array.isArray(data)
+       ?Object.entries(data).map(([k,v])=>
+         `<div class="field"><label>${esc(human(k))}</label><div class="value">${formatValue(v)}</div></div>`
+        ).join('')
+       :`<div class="field"><div class="value">${formatValue(data)}</div></div>`;
+
+     const products=key==='H. PRODUK / JASA'
+       ?renderProducts(brief.brief_data?.products):'';
+
+     const id=n++;
+
+     return `<section class="accordion ${
+       key==='R. PERMINTAAN TAMBAHAN / KEBUTUHAN KHUSUS'?'open':''
+     }">
+       <button class="acc-head" type="button">
+         <span>${esc(SECTION_TITLES[key])}</span><span>+</span>
+       </button>
+       <div class="acc-body">
+         <div class="kv">${content}</div>
+         ${products}
+         ${review?reviewBox(key,id):''}
+       </div>
+     </section>`;
+   }).join('');
+
+   document.querySelectorAll('.acc-head').forEach(b=>b.addEventListener('click',()=>{
+     const a=b.parentElement;
+     a.classList.toggle('open');
+     b.lastElementChild.textContent=a.classList.contains('open')?'−':'+';
+   }));
+
+   renderWorkflowState();
+
+   document.getElementById('startReviewBtn').addEventListener('click',async()=>{
+     if(!confirm('Mulai pemeriksaan untuk brief ini? Status akan berubah menjadi UNDER_REVIEW.')) return;
+     const btn=document.getElementById('startReviewBtn');
+     btn.disabled=true; btn.textContent='Menyimpan...';
+     try{
+       await updateBriefStatus('UNDER_REVIEW');
+       alert('Pemeriksaan dimulai. Status brief sekarang UNDER_REVIEW.');
+     }catch(err){
+       alert(err.message||String(err));
+       btn.disabled=false; btn.textContent='Mulai Pemeriksaan';
+     }
+   });
+
+   document.getElementById('loading').style.display='none';
+   document.getElementById('appContent').style.display='block';
+
+ }catch(e){
+   document.getElementById('loading').innerHTML=
+     '<div style="padding:30px;background:#fff;border:1px solid #e4e7ec;border-radius:14px">'+
+     '<b>Gagal memuat Scope Review</b><p>'+esc(e.message||String(e))+'</p></div>';
+ }
+}
+
+main();
+</script>
+</body>
+</html>

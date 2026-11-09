@@ -1,43 +1,156 @@
-<!doctype html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin — Review Client Brief | Khania Studio</title>
-<link rel="stylesheet" href="css/admin-form-brief.css">
-</head>
-<body>
-<div id="loading" class="loading-screen">Memeriksa sesi admin...</div>
-<div id="app" class="app hidden">
-  <aside class="sidebar">
-    <div class="brand"><div class="brand-mark">KS</div><div><strong>KHANIA STUDIO</strong><small>ADMIN PANEL</small></div></div>
-    <nav>
-      <a class="nav-item" href="admin-dashboard.html">Dashboard</a>
-      <a class="nav-item active" href="admin-pesanan.html">Pesanan</a>
-      <a class="nav-item" href="#">Klien</a><a class="nav-item" href="#">Pembayaran</a><a class="nav-item" href="#">Voucher</a><a class="nav-item" href="#">Pesan</a><a class="nav-item" href="#">Pengumuman</a><a class="nav-item" href="#">Form Brief</a><a class="nav-item" href="#">Pengaturan</a>
-    </nav>
-    <div class="sidebar-foot">Khania Studio<br><span>Website &amp; Digital Solutions</span></div>
-  </aside>
-  <main class="main">
-    <header class="topbar">
-      <div><div class="eyebrow">ADMIN / PESANAN / FORM BRIEF</div><h1>Review Client Brief</h1><p>Mode Stage 2E-1: membaca Client Brief V3 yang sudah dikirim client.</p></div>
-      <div class="admin-user"><span id="adminEmail" class="admin-email">Admin</span><button id="logoutBtn" class="btn ghost">Keluar</button></div>
-    </header>
-    <div id="errorBox" class="error-box hidden"></div>
-    <section class="panel hero-panel">
-      <div class="back-row"><a href="admin-pesanan.html" class="back-link">← Kembali ke Pesanan</a></div>
-      <div class="eyebrow">DETAIL CLIENT BRIEF</div>
-      <h2 id="orderTitle">-</h2><p id="orderSubtitle">-</p>
-      <div id="orderMeta" class="meta-grid"></div>
-    </section>
-    <section class="panel">
-      <div class="section-head"><div><div class="eyebrow">STATUS</div><h2>Client Brief V3</h2></div><span id="briefStatus" class="status-badge">-</span></div>
-      <div id="briefMeta" class="brief-meta"></div>
-    </section>
-    <section id="briefSections" class="brief-sections"></section>
-  </main>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/admin-form-brief.js"></script>
-</body>
-</html>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Review Client Brief — Khania Studio</title><style>
+:root{--navy:#101828;--gold:#d4af37;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}.layout{min-height:100vh;display:flex}.side{width:245px;background:#0f172a;color:#fff;padding:22px 16px;position:fixed;inset:0 auto 0 0}.brand{display:flex;gap:12px;align-items:center;padding:8px}.logo{width:42px;height:42px;border-radius:10px;background:var(--gold);color:#111827;display:grid;place-items:center;font-weight:800}.brand b{display:block}.brand small{color:#b8c0d0}.nav{margin-top:28px}.nav a{display:block;color:#d9dfeb;text-decoration:none;padding:12px;border-radius:8px;margin:4px 0}.nav a.active{background:#1e293b;border-left:3px solid var(--gold);color:#fff}.main{margin-left:245px;width:calc(100% - 245px);padding:34px;max-width:1500px}.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:20px}.eyebrow{color:#667085;font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}.top h1{margin:5px 0 6px;font-family:Georgia,serif;font-size:32px}.sub{color:var(--muted);margin:0}.status{padding:9px 14px;border-radius:999px;font-weight:700;background:#e0ecff;color:#1d4ed8;white-space:nowrap}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}.info{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px}.info label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.info strong{display:block;font-size:15px;word-break:break-word}.notice{background:#fff9e8;border:1px solid #f3df9a;border-radius:12px;padding:14px 16px;margin-bottom:20px;color:#6b4e00}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}.card summary{list-style:none;cursor:pointer;padding:18px 20px;font-weight:800;font-size:17px;display:flex;justify-content:space-between;gap:15px}.card summary::-webkit-details-marker{display:none}.card summary:after{content:"＋";color:var(--muted)}.card[open] summary:after{content:"−"}.card.r{border-color:#e6c85a}.card.r summary{background:#fff9e8}.body{padding:0 20px 20px}.rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.row{border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:#fafbfc}.row label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.row div{white-space:pre-wrap;line-height:1.5}.empty{color:#98a2b3;font-style:italic}.products{display:grid;gap:10px}.product{border:1px solid var(--line);border-radius:10px;padding:13px}.product h4{margin:0 0 7px}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;margin-bottom:7px}.footer-actions{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;justify-content:space-between;gap:15px;align-items:center;margin-top:20px}.btn{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}.btn.primary{background:var(--navy);color:#fff}.btn.secondary{background:#eef2f6;color:#344054}.btn:disabled{opacity:.55;cursor:not-allowed}.small{font-size:12px;color:var(--muted);line-height:1.5}.error{background:#fff1f2;border:1px solid #fecdd3;color:#9f1239;padding:14px;border-radius:10px;margin-bottom:18px;display:none}.loading{padding:30px;text-align:center;color:var(--muted)}@media(max-width:1000px){.side{position:static;width:100%;height:auto}.layout{display:block}.main{margin:0;width:100%;padding:20px}.grid{grid-template-columns:repeat(2,1fr)}.rows{grid-template-columns:1fr}.top{flex-direction:column}}@media(max-width:600px){.grid{grid-template-columns:1fr}.main{padding:14px}}
+</style></head><body><div class="layout"><aside class="side"><div class="brand"><div class="logo">KS</div><div><b>KHANIA STUDIO</b><small>ADMIN PANEL</small></div></div><nav class="nav"><a href="admin-pesanan.html">Pesanan</a><a href="admin-form-brief.html" class="active">Form Brief</a></nav></aside><main class="main"><div id="error" class="error"></div><div id="loading" class="loading">Memuat Client Brief...</div><div id="content" style="display:none"><div class="top"><div><div class="eyebrow">Admin Area · Form Brief</div><h1>Review Client Brief</h1><p class="sub" id="subtitle">—</p></div><div class="status" id="statusBadge">—</div></div><div class="grid" id="summary"></div><div class="notice"><b>Mode Review Tahap 2E-2A:</b> halaman ini menampilkan data Client Brief yang tersimpan di Supabase secara terstruktur. Keputusan scope, biaya tambahan, dan perubahan status workflow <b>belum diaktifkan</b> pada tahap ini.</div><div id="sections"></div><div class="card" id="productsCard" style="display:none"><div style="padding:18px 20px;font-weight:800;font-size:17px">H. Produk / Jasa — Detail</div><div class="body" id="products"></div></div><div class="footer-actions"><div><b>Scope Review</b><div class="small">Tahap berikutnya akan menambahkan keputusan Termasuk Paket, Tambahan Biaya, Tidak Termasuk, atau Perlu Klarifikasi.</div></div><button class="btn secondary" id="backBtn">Kembali ke Pesanan</button><button class="btn primary" disabled>Mulai Pemeriksaan — Tahap Berikutnya</button></div></div></main></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>(async function(){
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const orderId = params.get('order_id') || '';
+
+  const sectionOrder = [
+    'A. DATA ORDER & PEMESAN','B. INFORMASI BISNIS','C. TUJUAN UTAMA WEBSITE',
+    'D. STRUKTUR HALAMAN','E. FITUR & FUNGSI WEBSITE','F. DOMAIN WEBSITE',
+    'G. WEBSITE LAMA & REDESIGN','H. PRODUK / JASA','I. BRAND & DESIGN DIRECTION',
+    'J. REFERENSI DESAIN','K. PESAN UTAMA WEBSITE','L. DATA SPESIFIK INDUSTRI',
+    'M. KREDIBILITAS & TESTIMONIAL','N. UPLOAD ASET & DOKUMEN',
+    'O. KONTAK BISNIS & MEDIA SOSIAL','P. SEO & TARGET PASAR',
+    'Q. PERIKSA & KONFIRMASI','R. PERMINTAAN TAMBAHAN / KEBUTUHAN KHUSUS'
+  ];
+
+  const prettyStatus = {
+    DRAFT:'Belum Dikirim', SUBMITTED:'Brief Diterima', UNDER_REVIEW:'Dalam Pemeriksaan',
+    NEED_CLIENT_INFO:'Perlu Info Klien', SCOPE_CONFIRMED:'Scope Dikonfirmasi',
+    READY_FOR_PRODUCTION:'Siap Produksi'
+  };
+
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g, m => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    }[m]));
+  }
+
+  function showError(msg){
+    $('loading').style.display='none';
+    $('error').style.display='block';
+    $('error').textContent=msg;
+  }
+
+  function normalizeRel(v){
+    if(!v) return null;
+    return Array.isArray(v) ? (v[0] || null) : v;
+  }
+
+  function nonEmpty(v){
+    if(v === null || v === undefined) return false;
+    if(Array.isArray(v)) return v.length > 0;
+    return String(v).trim() !== '';
+  }
+
+  function renderRows(obj){
+    const entries = Object.entries(obj || {}).filter(([k,v]) => nonEmpty(v));
+    if(!entries.length){
+      return '<div class="empty">Tidak ada data yang diisi pada bagian ini.</div>';
+    }
+    return '<div class="rows">' + entries.map(([k,v]) => {
+      const value = Array.isArray(v) ? v.join(', ') : String(v);
+      return '<div class="row"><label>' + esc(k) + '</label><div>' + esc(value) + '</div></div>';
+    }).join('') + '</div>';
+  }
+
+  try{
+    if(!orderId){
+      throw new Error('Order ID tidak ditemukan pada URL. Gunakan link dengan parameter ?order_id=...');
+    }
+
+    const cfgRes = await fetch('api/supabase-config.php',{cache:'no-store'});
+    const cfg = await cfgRes.json();
+    if(!cfg.success) throw new Error(cfg.message || 'Konfigurasi Supabase tidak tersedia.');
+
+    const client = supabase.createClient(cfg.url,cfg.anonKey);
+    const {data:{session},error:sessionError} = await client.auth.getSession();
+    if(sessionError) throw sessionError;
+    if(!session) throw new Error('Sesi Admin tidak ditemukan. Silakan login terlebih dahulu.');
+
+    const {data:profile,error:profileError} = await client
+      .from('profiles').select('role,full_name').eq('id',session.user.id).maybeSingle();
+    if(profileError) throw profileError;
+    if(!profile || profile.role !== 'admin') throw new Error('Akses ditolak. Halaman ini khusus Admin.');
+
+    const {data:order,error:orderError} = await client
+      .from('orders')
+      .select(`id,order_number,order_date,total_amount,status,client_id,
+        clients(id,client_code,full_name,business_name,email,whatsapp),
+        packages(id,code,name),
+        payments(id,payment_date,amount,status,verified_at)`)
+      .eq('id',orderId).maybeSingle();
+    if(orderError) throw orderError;
+    if(!order) throw new Error('Order tidak ditemukan.');
+
+    const {data:brief,error:briefError} = await client
+      .from('website_briefs')
+      .select('id,order_id,client_id,client_code,version,status,submitted_at,created_at,brief_sent_at,brief_data')
+      .eq('order_id',order.id)
+      .order('created_at',{ascending:false})
+      .limit(1).maybeSingle();
+    if(briefError) throw briefError;
+    if(!brief) throw new Error('Client Brief belum ditemukan untuk order ini.');
+
+    const c = normalizeRel(order.clients) || {};
+    const p = normalizeRel(order.packages) || {};
+    const data = brief.brief_data || {};
+    const sections = data.sections || {};
+
+    $('subtitle').textContent = `${order.order_number} — ${c.full_name || '-'} / ${c.business_name || '-'}`;
+    $('statusBadge').textContent = prettyStatus[brief.status] || brief.status || '-';
+
+    const summaryItems = [
+      ['Kode Klien', c.client_code || brief.client_code || '-'],
+      ['Order ID', order.order_number || '-'],
+      ['Paket', p.name || data.package || '-'],
+      ['Status Pembayaran', order.status === 'payment_verified' ? 'Pembayaran Terverifikasi' : (order.status || '-')],
+      ['Nama PIC', c.full_name || data.pic || '-'],
+      ['Email PIC', c.email || data.pic_email || '-'],
+      ['WhatsApp PIC', c.whatsapp || data.pic_whatsapp || '-'],
+      ['Tanggal Submit', brief.submitted_at ? new Date(brief.submitted_at).toLocaleString('id-ID') : '-']
+    ];
+
+    $('summary').innerHTML = summaryItems.map(([label,value]) =>
+      '<div class="info"><label>' + esc(label) + '</label><strong>' + esc(value) + '</strong></div>'
+    ).join('');
+
+    let sectionHtml = '';
+    for(const title of sectionOrder){
+      if(title === 'H. PRODUK / JASA') continue;
+      const obj = sections[title];
+      if(!obj) continue;
+      const isR = title.startsWith('R.');
+      sectionHtml += '<details class="card ' + (isR ? 'r' : '') + '" ' + (isR ? 'open' : '') + '>'
+        + '<summary>' + esc(title) + '</summary>'
+        + '<div class="body">' + renderRows(obj) + '</div>'
+        + '</details>';
+    }
+    $('sections').innerHTML = sectionHtml;
+
+    const products = Array.isArray(data.products) ? data.products : [];
+    if(products.length){
+      $('productsCard').style.display='block';
+      $('products').innerHTML = '<div class="products">' + products.map((x,i) =>
+        '<div class="product">'
+        + '<h4>' + esc((i+1) + '. ' + (x.name || '-')) + '</h4>'
+        + '<span class="pill">' + esc(x.isQuota ? 'Termasuk kuota tampilan lengkap' : 'Di luar kuota tampilan lengkap') + '</span>'
+        + '<div class="rows">'
+        + '<div class="row"><label>Status Harga</label><div>' + esc(x.priceStatus || '-') + '</div></div>'
+        + '<div class="row"><label>Harga</label><div>' + esc(x.price || '-') + '</div></div>'
+        + '<div class="row"><label>Deskripsi</label><div>' + esc(x.desc || '-') + '</div></div>'
+        + '<div class="row"><label>Keunggulan</label><div>' + esc(x.benef || '-') + '</div></div>'
+        + '</div></div>'
+      ).join('') + '</div>';
+    }
+
+    $('backBtn').onclick = () => { location.href='admin-pesanan.html'; };
+    $('loading').style.display='none';
+    $('content').style.display='block';
+  }catch(e){
+    console.error(e);
+    showError(e.message || 'Gagal memuat Client Brief.');
+  }
+})();
+</script></body></html>
